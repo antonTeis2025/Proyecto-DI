@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>reports &#8212; Aplicacion de Gestion (Diseño de Interfaces)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="../_static/documentation_options.js?v=10b23a5c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=f85f4cfb"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">reports</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para reports</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFont</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">conexion</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="Reports">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Reports</span><span class="p">:</span>
+    <span class="n">rootPath</span> <span class="o">=</span> <span class="s2">&quot;.</span><span class="se">\\</span><span class="s2">reports&quot;</span>
+
+<div class="viewcode-block" id="Reports.create_canvas">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.create_canvas">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_canvas</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">title_suffix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea un canvas nuevo para cada reporte con su propio nombre.&quot;&quot;&quot;</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">title_suffix</span><span class="si">}</span><span class="s2">.pdf&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">pdf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">rootPath</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pdf_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">c</span></div>
+
+
+<div class="viewcode-block" id="Reports.topreport">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.topreport">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">topreport</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">titulo</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dibuja la cabecera con el título dinámico.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path_logo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="s2">&quot;logo.png&quot;</span><span class="p">)</span>
+            <span class="n">logo</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path_logo</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logo</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">785</span><span class="p">,</span> <span class="s2">&quot;EMPRESA TEIS&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Título que viene por parámetro</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawCentredString</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">675</span><span class="p">,</span> <span class="n">titulo</span><span class="p">)</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="mi">665</span><span class="p">,</span> <span class="mi">550</span><span class="p">,</span> <span class="mi">665</span><span class="p">)</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="n">path_logo</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">745</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">755</span><span class="p">,</span> <span class="s2">&quot;CIF: A55641214B&quot;</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">745</span><span class="p">,</span> <span class="s2">&quot;28080 Vigo&quot;</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">735</span><span class="p">,</span> <span class="s2">&quot;C/ A Picota, 12423&quot;</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">725</span><span class="p">,</span> <span class="s2">&quot;Tel: 912345678&quot;</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">715</span><span class="p">,</span> <span class="s2">&quot;Email: info@empresateis.com&quot;</span><span class="p">)</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">705</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">705</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">705</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">705</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en topreport:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Reports.footer">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.footer">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">footer</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">525</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M&quot;</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">465</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en footer:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ============================================================</span>
+    <span class="c1"># REPORT CUSTOMERS</span>
+    <span class="c1"># ============================================================</span>
+<div class="viewcode-block" id="Reports.reportCustomers">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.reportCustomers">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reportCustomers</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">create_canvas</span><span class="p">(</span><span class="s2">&quot;reportCustomers&quot;</span><span class="p">)</span>
+
+            <span class="n">records</span> <span class="o">=</span> <span class="n">Conexion</span><span class="o">.</span><span class="n">listCustomers</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DNI_NIE&quot;</span><span class="p">,</span> <span class="s2">&quot;SURNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;MOBILE&quot;</span><span class="p">,</span> <span class="s2">&quot;CITY&quot;</span><span class="p">,</span> <span class="s2">&quot;INVOICE TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;STATE&quot;</span><span class="p">]</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">topreport</span><span class="p">(</span><span class="s2">&quot;Report Customers&quot;</span><span class="p">)</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">695</span><span class="p">,</span> <span class="mi">525</span><span class="p">,</span> <span class="mi">695</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">footer</span><span class="p">()</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">55</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mi">630</span>
+
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">:</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">showPage</span><span class="p">()</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">topreport</span><span class="p">(</span><span class="s2">&quot;Report Customers&quot;</span><span class="p">)</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">footer</span><span class="p">()</span>
+
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">695</span><span class="p">,</span> <span class="mi">525</span><span class="p">,</span> <span class="mi">695</span><span class="p">)</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="mi">630</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+                <span class="n">dni</span> <span class="o">=</span> <span class="s1">&#39;****&#39;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;**&#39;</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dni</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">65</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">165</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">215</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">265</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">345</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">425</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;Activo&quot;</span> <span class="k">if</span> <span class="n">record</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="k">else</span> <span class="s2">&quot;Baja&quot;</span><span class="p">)</span>
+
+                <span class="n">y</span> <span class="o">-=</span> <span class="mi">15</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pdf_path</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en reportCustomers:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ============================================================</span>
+    <span class="c1"># REPORT PRODUCTS</span>
+    <span class="c1"># ============================================================</span>
+<div class="viewcode-block" id="Reports.reportProducts">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.reportProducts">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reportProducts</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">create_canvas</span><span class="p">(</span><span class="s2">&quot;reportProducts&quot;</span><span class="p">)</span>
+
+            <span class="n">records</span> <span class="o">=</span> <span class="n">Conexion</span><span class="o">.</span><span class="n">listProducts</span><span class="p">()</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CODE&quot;</span><span class="p">,</span> <span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;STOCK&quot;</span><span class="p">,</span> <span class="s2">&quot;FAMILY&quot;</span><span class="p">,</span> <span class="s2">&quot;UNIT PRICE&quot;</span><span class="p">]</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">topreport</span><span class="p">(</span><span class="s2">&quot;Report Products&quot;</span><span class="p">)</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">695</span><span class="p">,</span> <span class="mi">525</span><span class="p">,</span> <span class="mi">695</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">footer</span><span class="p">()</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">55</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mi">630</span>
+
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">:</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">showPage</span><span class="p">()</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">topreport</span><span class="p">(</span><span class="s2">&quot;Report Products&quot;</span><span class="p">)</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">footer</span><span class="p">()</span>
+
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">650</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                    <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">695</span><span class="p">,</span> <span class="mi">525</span><span class="p">,</span> <span class="mi">695</span><span class="p">)</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="mi">630</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">65</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">165</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">215</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">265</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+                <span class="n">y</span> <span class="o">-=</span> <span class="mi">15</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pdf_path</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en reportProducts:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ============================================================</span>
+    <span class="c1"># REPORT INVOICES</span>
+    <span class="c1"># ============================================================</span>
+<div class="viewcode-block" id="Reports.reportInvoices">
+<a class="viewcode-back" href="../src/reports.html#reports.Reports.reportInvoices">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reportInvoices</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">create_canvas</span><span class="p">(</span><span class="s2">&quot;reportInvoices&quot;</span><span class="p">)</span>
+
+            <span class="n">dni</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCustomerFac</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">titulo</span> <span class="o">=</span> <span class="s2">&quot;Factura Simple&quot;</span> <span class="k">if</span> <span class="n">dni</span> <span class="o">==</span> <span class="s2">&quot;00000000T&quot;</span> <span class="k">else</span> <span class="s2">&quot;Factura&quot;</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">topreport</span><span class="p">(</span><span class="n">titulo</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">dni</span> <span class="o">!=</span> <span class="s2">&quot;00000000T&quot;</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">Conexion</span><span class="o">.</span><span class="n">dataOneCustomer</span><span class="p">(</span><span class="n">dni</span><span class="p">)</span>
+
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s2">&quot;Helvetica-Bold&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="s2">&quot;DNI: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">625</span><span class="p">,</span> <span class="s2">&quot;Apellidos: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">610</span><span class="p">,</span> <span class="s2">&quot;Nombre: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">595</span><span class="p">,</span> <span class="s2">&quot;Dirección: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">drawString</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">580</span><span class="p">,</span> <span class="s2">&quot;Localidad: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; Provincia: &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+
+            <span class="bp">cls</span><span class="o">.</span><span class="n">footer</span><span class="p">()</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pdf_path</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en reportInvoices:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+</div>
+
+
+            
+            
+
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">reports</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Miguel Rodríguez Quintás.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

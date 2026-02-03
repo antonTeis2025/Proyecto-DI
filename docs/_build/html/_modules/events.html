@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>events &#8212; Aplicacion de Gestion (Diseño de Interfaces)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="../_static/documentation_options.js?v=10b23a5c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=f85f4cfb"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">events</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para events</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">conexion</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">globals</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">customers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customers</span>
+
+
+
+<div class="viewcode-block" id="Events">
+<a class="viewcode-back" href="../src/events.html#events.Events">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Events</span><span class="p">:</span>
+<div class="viewcode-block" id="Events.messageExit">
+<a class="viewcode-back" href="../src/events.html#events.Events.messageExit">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">messageExit</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Question</span><span class="p">)</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;./img/logo.png&quot;</span><span class="p">))</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Exit Message&quot;</span><span class="p">)</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Are you sure you want to exit?&quot;</span><span class="p">)</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setDefaultButton</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+            <span class="n">mbox</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="nb">globals</span><span class="o">.</span><span class="n">mboxStyleSheet</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error salida&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.messageAbout">
+<a class="viewcode-back" href="../src/events.html#events.Events.messageAbout">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">messageAbout</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">venAbout</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en mostrar version&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.closeAbout">
+<a class="viewcode-back" href="../src/events.html#events.Events.closeAbout">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closeAbout</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">venAbout</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cerrar version&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.openCalendar">
+<a class="viewcode-back" href="../src/events.html#events.Events.openCalendar">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">openCalendar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">vencal</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en claendario&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.loadData">
+<a class="viewcode-back" href="../src/events.html#events.Events.loadData">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadData</span><span class="p">(</span><span class="n">qDate</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">/</span><span class="si">{:02d}</span><span class="s1">/</span><span class="si">{:4d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">qDate</span><span class="o">.</span><span class="n">day</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">month</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">year</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">panMain</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtAltacli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">vencal</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Data&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Events.loadProvincia">
+<a class="viewcode-back" href="../src/events.html#events.Events.loadProvincia">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadProvincia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvincecli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="nb">list</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">listProv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvincecli</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Provincia:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.loadMunicli">
+<a class="viewcode-back" href="../src/events.html#events.Events.loadMunicli">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadMunicli</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">provincia</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProvincecli</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+            <span class="nb">list</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">listMuniProv</span><span class="p">(</span><span class="n">provincia</span><span class="p">)</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCitycli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCitycli</span><span class="o">.</span><span class="n">addItems</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Municipio:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.resizeTabCustomer">
+<a class="viewcode-back" href="../src/events.html#events.Events.resizeTabCustomer">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTabCustomer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableCustomerList</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableCustomerList</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Tab Customer:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.saveBackup">
+<a class="viewcode-back" href="../src/events.html#events.Events.saveBackup">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveBackup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+            <span class="n">fileName</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="s2">&quot;_backup.zip&quot;</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">dlgopen</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Save Backup File&quot;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">globals</span><span class="o">.</span><span class="n">dlgopen</span><span class="o">.</span><span class="n">accept</span> <span class="ow">and</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">filezip</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                <span class="n">filezip</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;./data/bbdd.sqlite&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="s1">&#39;data/bbdd.sqlite&#39;</span><span class="p">))</span>
+                <span class="n">filezip</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;./img/logo.png&quot;</span><span class="p">))</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Save Backup&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Save Backup Done&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="nb">globals</span><span class="o">.</span><span class="n">mboxStyleSheet</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en save backup&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.restoreBackup">
+<a class="viewcode-back" href="../src/events.html#events.Events.restoreBackup">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restoreBackup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">dlgopen</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Restore Backup File&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s2">&quot;*.zip;;All Files (*)&quot;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bbdd</span><span class="p">:</span>
+                    <span class="n">bbdd</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./data&#39;</span> <span class="p">,</span><span class="n">pwd</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="c1">#shutil.move(&#39;bbdd.sqlite&#39;, &#39;./data&#39;)</span>
+                <span class="n">bbdd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;./img/logo.png&quot;</span><span class="p">))</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Restore Backup&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Restore Backup Done&quot;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="nb">globals</span><span class="o">.</span><span class="n">mboxStyleSheet</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">db_conexion</span><span class="p">()</span>
+                <span class="n">Events</span><span class="o">.</span><span class="n">loadProvincia</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">Customers</span><span class="o">.</span><span class="n">loadTablecli</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en restore backup&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.exportXlsCustomers">
+<a class="viewcode-back" href="../src/events.html#events.Events.exportXlsCustomers">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportXlsCustomers</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+            <span class="n">copy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_customers.csv&#39;</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">dlgopen</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Save Backup file&quot;</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+            <span class="c1"># globals.dlgOpen.centrar()</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">records</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">Conexion</span><span class="o">.</span><span class="n">listCustomers</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+                    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
+                    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;DNI_NIE&#39;</span><span class="p">,</span> <span class="s1">&#39;AddData&#39;</span><span class="p">,</span> <span class="s1">&#39;Surname&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;eMail&#39;</span><span class="p">,</span> <span class="s1">&#39;Mobile&#39;</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;Province&#39;</span><span class="p">,</span> <span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;InvoiceType&#39;</span><span class="p">,</span> <span class="s1">&#39;Active&#39;</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;./img/logo.ico&#39;</span><span class="p">))</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Export Customers&#39;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Export Customers Done&#39;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowIcon</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QIcon</span><span class="p">(</span><span class="s1">&#39;./img/logo.ico&#39;</span><span class="p">))</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Export Customers&#39;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Export Customers Error&#39;</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">StandardButton</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+                <span class="n">mbox</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error en exportar customers&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Events.loadStatusBar">
+<a class="viewcode-back" href="../src/events.html#events.Events.loadStatusBar">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadStatusBar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%y&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelstatus</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelstatus</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelstatus</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">statusbar</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelstatus</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelversion</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelversion</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelversion</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Version 0.0.1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelversion</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;labelversion&quot;</span><span class="p">)</span>
+            <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">statusbar</span><span class="o">.</span><span class="n">addPermanentWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labelversion</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en loadStatusBar&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.resizeTabProducts">
+<a class="viewcode-back" href="../src/events.html#events.Events.resizeTabProducts">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTabProducts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableProducts</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableProducts</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Tab Customer:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Events.resizeTabInvProducts">
+<a class="viewcode-back" href="../src/events.html#events.Events.resizeTabInvProducts">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTabInvProducts</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableInvoiceProducts</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableProducts</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en Resize Tab Inv Products&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTabInv</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableInvoiceList</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableInvoiceList</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Tab inv:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Events.resizeTabInv">
+<a class="viewcode-back" href="../src/events.html#events.Events.resizeTabInv">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeTabInv</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableInvoiceList</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="n">header_items</span> <span class="o">=</span> <span class="nb">globals</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tableInvoiceList</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">font</span> <span class="o">=</span> <span class="n">header_items</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">header_items</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error en cargar Tab inv fac:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">events</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Miguel Rodríguez Quintás.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; Aplicacion de Gestion (Diseño de Interfaces)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="../_static/documentation_options.js?v=10b23a5c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=f85f4cfb"></script>
+
+    
+    
+     
+        <script src="../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Conexionserver" href="conexionserver.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Products.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="conexionserver.html" title="Conexionserver"
+             accesskey="N">siguiente</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="Products.html" title="&lt;no title&gt;"
+             accesskey="P">anterior</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">Modulos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <dl class="py class" id="module-conexion">
+<dt class="sig sig-object py" id="conexion.Conexion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">conexion.</span></span><span class="sig-name descname"><span class="pre">Conexion</span></span><a class="reference internal" href="../_modules/conexion.html#Conexion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase para manejar la conexión y operaciones sobre la base de datos SQLite
+de clientes, productos y facturación mediante PyQt6.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.addCli">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">addCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newcli</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.addCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.addCli" title="Link to this definition">¶</a></dt>
+<dd><p>Agrega un nuevo cliente a la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newcli</strong> (<em>list</em>) – Lista con los datos del cliente en el siguiente orden:
+[dni_nie, adddata, surname, name, mail, mobile, address, province, city, invoicetype]</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.addProduct">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">addProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newProduct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.addProduct"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.addProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Agrega un nuevo producto a la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newProduct</strong> (<em>list</em>) – Lista con los datos del producto en el siguiente orden:
+[name, family, stock, unitPrice]</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.allInvoice">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">allInvoice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.allInvoice"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.allInvoice" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene todas las facturas de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista de facturas, cada factura es una lista de sus campos.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.buscaCli">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">buscaCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.buscaCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.buscaCli" title="Link to this definition">¶</a></dt>
+<dd><p>Comprueba si existe un cliente por su DNI/NIE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dni</strong> (<em>str</em>) – DNI/NIE del cliente.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si el cliente existe, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.dataOneCustomer">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dataOneCustomer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dato</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.dataOneCustomer"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.dataOneCustomer" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene los datos de un cliente a partir de su móvil o DNI/NIE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dato</strong> (<em>str</em>) – Número de móvil o DNI/NIE del cliente.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista con los datos del cliente, vacía si no se encuentra.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.dataOneProduct">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dataOneProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.dataOneProduct"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.dataOneProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene los datos de un producto por su nombre.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Nombre del producto.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista con los datos del producto, vacía si no se encuentra.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.db_conexion">
+<span class="sig-name descname"><span class="pre">db_conexion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.db_conexion"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.db_conexion" title="Link to this definition">¶</a></dt>
+<dd><p>Establece la conexión con la base de datos SQLite y verifica su validez.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True si la conexión es correcta y la base de datos es válida, False en caso contrario.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.delCli">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">delCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.delCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.delCli" title="Link to this definition">¶</a></dt>
+<dd><p>Marca un cliente como no histórico (eliminación lógica).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dni</strong> (<em>str</em>) – DNI/NIE del cliente.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.delProduct">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">delProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.delProduct"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.delProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina un producto de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Nombre del producto.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.existeFacturaSales">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">existeFacturaSales</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idFac</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.existeFacturaSales"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.existeFacturaSales" title="Link to this definition">¶</a></dt>
+<dd><p>Comprueba si existen ventas asociadas a una factura.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idFac</strong> (<em>int</em>) – ID de la factura.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si existen ventas para la factura, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.insertInvoice">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">insertInvoice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.insertInvoice"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.insertInvoice" title="Link to this definition">¶</a></dt>
+<dd><p>Inserta una nueva factura para un cliente.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dni</strong> (<em>str</em>) – DNI/NIE del cliente.</p></li>
+<li><p><strong>date</strong> (<em>str</em>) – Fecha de la factura.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.listCustomers">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">listCustomers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.listCustomers"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.listCustomers" title="Link to this definition">¶</a></dt>
+<dd><p>Lista todos los clientes o solo los históricos según el parámetro.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> (<em>bool</em>) – True para listar solo clientes históricos, False para todos.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista de clientes, cada cliente es una lista de sus campos.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.listMuniProv">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">listMuniProv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provincia</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.listMuniProv"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.listMuniProv" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene los municipios correspondientes a una provincia dada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>provincia</strong> (<em>str</em>) – Nombre de la provincia.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista de nombres de municipios pertenecientes a la provincia.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.listProducts">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">listProducts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.listProducts"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.listProducts" title="Link to this definition">¶</a></dt>
+<dd><p>Lista todos los productos existentes en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista de productos, cada producto es una lista de sus campos.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.listProv">
+<span class="sig-name descname"><span class="pre">listProv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.listProv"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.listProv" title="Link to this definition">¶</a></dt>
+<dd><p>Lista todas las provincias existentes en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista de nombres de provincias.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.loadSalesByFac">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">loadSalesByFac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idFac</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.loadSalesByFac"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.loadSalesByFac" title="Link to this definition">¶</a></dt>
+<dd><p>Carga las ventas asociadas a una factura.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idFac</strong> (<em>int</em>) – ID de la factura.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista de ventas, cada venta es una lista de sus campos.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.modifCli">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">modifCli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifCli</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.modifCli"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.modifCli" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un cliente existente.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dni</strong> (<em>str</em>) – DNI/NIE del cliente a modificar.</p></li>
+<li><p><strong>modifCli</strong> (<em>list</em>) – Lista con los nuevos datos del cliente en el siguiente orden:
+[adddata, surname, name, mail, mobile, address, province, city, historical, invoicetype]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.modifyProduct">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">modifyProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modifProduct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.modifyProduct"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.modifyProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Modifica los datos de un producto existente.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>modifProduct</strong> (<em>list</em>) – Lista con los datos del producto en el siguiente orden:
+[name, stock, family, unitPrice]</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la operación fue exitosa, False en caso contrario.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.saveSales">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">saveSales</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sales</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.saveSales"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.saveSales" title="Link to this definition">¶</a></dt>
+<dd><p>Guarda las ventas de una factura en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sales</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – Lista de ventas, cada venta contiene
+[idFac, idProduct, productName, productPrice, amount, totalPrice]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="conexion.Conexion.selectProduct">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">selectProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/conexion.html#Conexion.selectProduct"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#conexion.Conexion.selectProduct" title="Link to this definition">¶</a></dt>
+<dd><p>Obtiene un producto por su código.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Código del producto.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Lista con los datos del producto, vacía si no se encuentra.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="../index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Conexion</span></code></a><ul>
+<li><a class="reference internal" href="#conexion.Conexion.addCli"><code class="docutils literal notranslate"><span class="pre">Conexion.addCli()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.addProduct"><code class="docutils literal notranslate"><span class="pre">Conexion.addProduct()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.allInvoice"><code class="docutils literal notranslate"><span class="pre">Conexion.allInvoice()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.buscaCli"><code class="docutils literal notranslate"><span class="pre">Conexion.buscaCli()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.dataOneCustomer"><code class="docutils literal notranslate"><span class="pre">Conexion.dataOneCustomer()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.dataOneProduct"><code class="docutils literal notranslate"><span class="pre">Conexion.dataOneProduct()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.db_conexion"><code class="docutils literal notranslate"><span class="pre">Conexion.db_conexion()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.delCli"><code class="docutils literal notranslate"><span class="pre">Conexion.delCli()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.delProduct"><code class="docutils literal notranslate"><span class="pre">Conexion.delProduct()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.existeFacturaSales"><code class="docutils literal notranslate"><span class="pre">Conexion.existeFacturaSales()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.insertInvoice"><code class="docutils literal notranslate"><span class="pre">Conexion.insertInvoice()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.listCustomers"><code class="docutils literal notranslate"><span class="pre">Conexion.listCustomers()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.listMuniProv"><code class="docutils literal notranslate"><span class="pre">Conexion.listMuniProv()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.listProducts"><code class="docutils literal notranslate"><span class="pre">Conexion.listProducts()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.listProv"><code class="docutils literal notranslate"><span class="pre">Conexion.listProv()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.loadSalesByFac"><code class="docutils literal notranslate"><span class="pre">Conexion.loadSalesByFac()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.modifCli"><code class="docutils literal notranslate"><span class="pre">Conexion.modifCli()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.modifyProduct"><code class="docutils literal notranslate"><span class="pre">Conexion.modifyProduct()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.saveSales"><code class="docutils literal notranslate"><span class="pre">Conexion.saveSales()</span></code></a></li>
+<li><a class="reference internal" href="#conexion.Conexion.selectProduct"><code class="docutils literal notranslate"><span class="pre">Conexion.selectProduct()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="Products.html"
+                          title="Previous page">&larr; &lt;no title&gt;</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="conexionserver.html"
+                          title="Next page">&rarr; Conexionserver</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/src/conexion.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="conexionserver.html" title="Conexionserver"
+             >siguiente</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="Products.html" title="&lt;no title&gt;"
+             >anterior</a> &nbsp; &nbsp;</li>
+    <li><a href="../index.html">Aplicacion de Gestion (Diseño de Interfaces)</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="modules.html" >Modulos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, Miguel Rodríguez Quintás.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

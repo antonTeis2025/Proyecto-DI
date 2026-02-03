@@ -1,0 +1,257 @@
+
+QWidget{
+    font-family: Arial, sans-serif;
+}
+QMainWindow{
+    background-color: #f4f7fa;
+}
+/* Manu Bar */
+    QMenuBar{
+        background-color: #b5c6db; /*Cambiar a color t3*/
+        spacing: 3px;
+        color: #2b2f40;
+    }
+    QMenuBar::item{
+        border-radius: 2px;
+        padding: 6px;
+        margin-top: 2px;
+        margin-bottom: 1px;
+    }
+    QMenuBar::item:selected{
+        background-color: #e6ecf3;
+    }
+QTabWidget::pane {
+    background-color: #e6ecf3;
+    border: 1px solid #ccc;
+}
+QTabBar::tab {
+    background: #b5c6db;
+    padding: 5px 10px;
+    border: 0px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+QTabBar::tab:hover {
+    background: #e6ecf3;
+}
+
+QTabBar::tab:selected {
+    background: #e6ecf3;
+    border-radius: 2px;
+}
+/*Toolbar*/
+
+QToolBar {
+    background-color: #e6ecf3; /* mismo tono que la barra de menú */
+    border: none;
+    padding: 4px;
+    spacing: 6px;
+}
+
+/* Botones dentro del toolbar */
+QToolButton {
+    background-color: #e6ecf3;
+    color: #2b2f40;
+    border: none;
+    border-radius: 2px;
+    margin: 2px;
+}
+
+QToolButton:hover {
+    background-color: #f4f7fa;
+}
+
+/* Cambio de la caja del botonn */
+    QPushButton{
+        background-color: #92a8c8;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+    QPushButton#btnDelcli {
+        background-color: #d8a3a3;
+    }
+    QPushButton#btnDeleteProduct {
+        background-color: #d8a3a3;
+    }
+/* Cambio de la caja del botonn al estar encima*/
+    QPushButton:hover{
+        background-color: #f4f7fa;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+    QPushButton#btnDelcli:hover{
+        background-color: #f4f7fa;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+    QPushButton#btnDeleteProduct:hover{
+        background-color: #f4f7fa;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+
+/*Botones con iconos*/
+QPushButton#btnBuscacli{
+    background-color: #e6ecf3;
+}
+QPushButton#btnBuscacli:hover{
+	background-color: #f4f7fa;
+}
+QPushButton#btnFechaaltacli{
+    background-color: #e6ecf3;
+}
+QPushButton#btnFechaaltacli:hover{
+	background-color: #f4f7fa;
+}
+QPushButton#btnCleancli{
+    background-color: #e6ecf3;
+}
+QPushButton#btnCleancli:hover{
+	background-color: #f4f7fa;
+}
+
+/* Cambio de la caja del combobox */
+    QComboBox{
+        background-color: #f4f7fa;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+/*Cambio flecha combobox*/
+    QComboBox::down-arrow {
+        image: url(img/drop-down-arrow.png);
+        width: 15px;
+        height: 25px;
+        border: 0px;
+        border-radius: 5px;
+        margin-right: 7px;
+    }
+    /*Combio caja de la flecha del combobox*/
+    QComboBox::drop-down {
+        border: none;
+    }
+    QComboBox::down-arrow:hover {
+        background-color: #ffffff; /* Color al pasar el mouse */
+    }
+    QLineEdit{
+        background-color: #f4f7fa
+    }
+
+/*Cambiar el color del checkBox */
+    QCheckBox {
+        color: #2b2f40;
+    }
+
+    QCheckBox::indicator{
+        border: 1px solid #92a8c8;
+        border-radius: 2px;
+        width: 13px;
+        height: 13px;
+        background-color: #f4f7fa;
+    }
+
+    QCheckBox::indicator:unchecked {
+
+    }
+    QCheckBox::indicator:checked {
+        image: url(img/tick.png);
+
+    }
+/*Cambiar radiobuttons*/
+    QRadioButton::indicator {
+        width: 13px;
+        height: 13px;
+        border-radius: 8px;
+        border: 2px solid #92a8c8;   /* Borde del círculo */
+        background-color: #f4f7fa;   /* Fondo del círculo sin marcar */
+    }
+
+    QRadioButton::indicator:checked {
+        image: url(img/tick.png);
+    }
+/*TABLA*/
+    /*CAMBIAR TITULO TABLA*/
+        QLabel#lblListcli {
+            font-family: "Arial";
+            font-size: 24px;
+            font-weight: bold;
+            color: #2b2f40;
+            letter-spacing: 1px;
+        }
+    /*Cabecera*/
+        QHeaderView::section {
+            background-color: #b5c6db;
+            color: #2b2f40;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 2px;
+        }
+    /* Fondo general de la tabla */
+        QTableWidget, QTableView {
+            background-color: #f4f7fa;
+            color: #2b2f40;
+
+        }
+
+    /* Filas */
+        QTableWidget::item:alternate {
+            background-color: #e6ecf3;
+        }
+        QTableView::item:selected {
+        background-color: #4d5780;
+        color: #ffffff;
+        }
+        QTableView::item:hover {
+            background-color: #4d5780;
+            color: #ffffff;
+        }
+
+/*MensageBox*/
+    /* Mensage box buttons */
+    QMessageBox::QPushButton {
+        background-color: #92a8c8;
+        color: #2b2f40;
+        border: 0px;
+        border-radius: 2px;
+    }
+
+    QMessageBox::QPushButton #noButton {
+        background-color: #d8a3a3;
+    }
+
+    /* Labels dentro del diálogo */
+    QMessageBox::QLabel  {
+        color: #2b2f40;
+        font-size: 16px;
+    }
+
+
+/* STATUS BAR */
+QStatusBar {
+    background-color: #b5c6db; /* mismo color que la barra de menús */
+    color: #2b2f40;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* QLabel dentro de la statusbar */
+QStatusBar QLabel {
+    color: #2b2f40;
+    background-color: transparent;
+    padding: 4px 10px;
+}
+
+/* Separación visual entre los labels*/
+QStatusBar::item {
+    border: none;
+    margin: 0px 8px;
+}
+QStatusBar QLabel#labelversion {
+    color: #4d5780;
+    font-style: italic;
+}

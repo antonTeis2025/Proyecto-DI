@@ -1,0 +1,10 @@
+// enlace a la web https://uicolors.app/generate/6b7eae
+#f4f7fa // azul super claro fondo cajas texto y fondo muy general
+#e6ecf3 // Azul muy claro fondo general
+#b5c6db // t3 color cabecera tabla y fondo menu bar-->
+
+#92a8c8 // Azul gris suave fondo botones
+#4d5780 // Azul oscuro fila selecionada checked
+#2b2f40 // negro azulado letras
+
+#d8a3a3 // Rojo suave fondo boton delete
