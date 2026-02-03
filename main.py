@@ -67,11 +67,12 @@ class Main(QtWidgets.QMainWindow):
         Invoice.checkDni()
 
         # Function of chkHistoriccli
-        # Carga los clientes a la tabla
+        # Carga los clientes a la tabla cada vez  que se cambia el chbx de historico
         globals.ui.chkHistoriccli.stateChanged.connect(Customers.historicoCli)
 
         # Functions comboBox
         Events.loadProvincia(self)
+        # Cada vez que se selecciona una provincia, se cargan sus municicpios
         globals.ui.cmbProvincecli.currentIndexChanged.connect(events.Events.loadMunicli)
 
 
@@ -81,15 +82,15 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.btnDelcli.clicked.connect(Customers.delCustomer) # r
         globals.ui.btnSavecli.clicked.connect(Customers.saveCli) # r
         globals.ui.btnCleancli.clicked.connect(Customers.cleanCli) # r
-        globals.ui.btnModycli.clicked.connect(Customers.modifCli) # todo bug: invoice type
+        globals.ui.btnModycli.clicked.connect(Customers.modifCli) # r
         globals.ui.btnBuscacli.clicked.connect(Customers.buscaCli) # r
         globals.ui.btnCleanFac.clicked.connect(Invoice.cleanInv) # r
-        globals.ui.btnSaveFac.clicked.connect(Invoice.saveInvoice) # todo
-        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # todo
+        globals.ui.btnSaveFac.clicked.connect(Invoice.saveInvoice) # r
+        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # todo: informe facturas
 
         # Functions of tables
         globals.ui.tableCustomerList.clicked.connect(Customers.selectCustomer) # r
-        globals.ui.tableInvoiceList.clicked.connect(Invoice.selectInvoice) # todo
+        globals.ui.tableInvoiceList.clicked.connect(Invoice.selectInvoice) # r
         globals.ui.tableInvoiceProducts.itemChanged.connect(Invoice.cellChangedSales) # todo
 
         #Functions

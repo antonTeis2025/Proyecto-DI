@@ -8,6 +8,8 @@ import conexion
 import globals
 from conexion import Conexion
 from reports import Reports
+from services.customer_service import CustomerService
+from services.invoice_service import InvoiceService
 
 
 class Invoice:
@@ -67,22 +69,45 @@ class Invoice:
 
     @staticmethod
     def saveInvoice():
+        # Conseguir el DNI de la caja de texto
         dni = globals.ui.txtDniCustomerFac.text().strip().upper()
         if dni == "":
             dni = "00000000T"
-        if conexion.Conexion.buscaCli(dni):
+        # Conseguir el cliente de la BBDD
+        cliente = CustomerService.get_by_dni(dni)
+
+        if cliente:
+            # Poner DNI en la caja de texto
             globals.ui.txtDniCustomerFac.setText(dni)
+            # Poner la fecha actual en la caja de texto
             data = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M")
             globals.ui.lblFechaFac.setText(data)
-            if conexion.Conexion.insertInvoice(dni, data):
+            # Crear factura
+            factura = None
+            try:
+                factura = InvoiceService.create(customer_dni = dni, items = None)
+            except Exception as e:
+                print(f"ERROR AL CREAR FACTURA: {e}")
+
+            if factura != None: # Si el proceso no falla
                 Invoice.loadTableFac(True)
-            mbox = QtWidgets.QMessageBox()
-            mbox.setWindowTitle("Invoice")
-            mbox.setIcon(QtWidgets.QMessageBox.Icon.Information)
-            mbox.setText("Invoice Saved")
-            mbox.setStyleSheet(globals.mboxStyleSheet)
-            QtCore.QTimer.singleShot(1000, mbox.close)
-            mbox.exec()
+                # Mensaje de exito
+                mbox = QtWidgets.QMessageBox()
+                mbox.setWindowTitle("Invoice")
+                mbox.setIcon(QtWidgets.QMessageBox.Icon.Information)
+                mbox.setText("Invoice Saved")
+                mbox.setStyleSheet(globals.mboxStyleSheet)
+                QtCore.QTimer.singleShot(1000, mbox.close)
+                mbox.exec()
+            else:
+                mbox = QtWidgets.QMessageBox()
+                mbox.setWindowTitle("Invoice")
+                mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                mbox.setText("Error al crear la factura")
+                mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok)
+                mbox.setStyleSheet(globals.mboxStyleSheet)
+                mbox.exec()
+
         else:
             mbox = QtWidgets.QMessageBox()
             mbox.setWindowTitle("Invoice")
@@ -91,23 +116,26 @@ class Invoice:
             mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok)
             mbox.setStyleSheet(globals.mboxStyleSheet)
             mbox.exec()
+
         Invoice.loadTableFac(False)
 
     @staticmethod
     def loadTableFac(showData=False):
         try:
-            records = conexion.Conexion.allInvoice()
+            # records = conexion.Conexion.allInvoice()
+            # record: ['16', '00000000T', '26/11/2025-09:42']
+            records = InvoiceService.get_all()
             index = 0
             for record in records:
                 if showData and record == records[0]:
-                    globals.ui.lblNumFac.setText(record[0])
-                    globals.ui.lblFechaFac.setText(2)
+                    globals.ui.lblNumFac.setText(str(record.id))
+                    globals.ui.lblFechaFac.setText(str(record.date))
 
-                print(record)
+                # print(record)
                 globals.ui.tableInvoiceList.setRowCount(index + 1)
-                globals.ui.tableInvoiceList.setItem(index, 0, QtWidgets.QTableWidgetItem(str(record[0])))
-                globals.ui.tableInvoiceList.setItem(index, 1, QtWidgets.QTableWidgetItem(str(record[1])))
-                globals.ui.tableInvoiceList.setItem(index, 2, QtWidgets.QTableWidgetItem(str(record[2])))
+                globals.ui.tableInvoiceList.setItem(index, 0, QtWidgets.QTableWidgetItem(str(record.id)))
+                globals.ui.tableInvoiceList.setItem(index, 1, QtWidgets.QTableWidgetItem(str(record.customer_dni)))
+                globals.ui.tableInvoiceList.setItem(index, 2, QtWidgets.QTableWidgetItem(str(record.date)))
 
                 btn_del = QtWidgets.QPushButton()
                 btn_del.setIcon(QIcon("./img/basura.png"))
@@ -132,6 +160,7 @@ class Invoice:
     @staticmethod
     def selectInvoice():
         try:
+            # Pone to.do a 0 y carga los datos que están en la propia fila
             globals.subtotal = 0
             globals.sales = []
             row = globals.ui.tableInvoiceList.selectedItems()
@@ -140,20 +169,31 @@ class Invoice:
             globals.ui.txtDniCustomerFac.setText(data[1])
             globals.ui.lblFechaFac.setText(data[2])
             Invoice.checkDni()
-            selectedSales = conexion.Conexion.loadSalesByFac(data[0])
 
-            if selectedSales != []:
+            #selectedSales = conexion.Conexion.loadSalesByFac(data[0])
+
+            # data[0] -> id
+            # Carga las ventas de la factura seleccionada
+            sales = InvoiceService.get_by_id(int(data[0])).details
+
+            if sales != []: # Si existen ventas
                 Invoice.isSaleAlreadyDone = True
-                Invoice.activeSales()
+                Invoice.activeSales() # calcula las columnas
                 globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-                for row, sale in enumerate(selectedSales):
-                    globals.ui.tableInvoiceProducts.setItem(row, 0, QtWidgets.QTableWidgetItem(sale[2]))
+
+                # Va iterando los datos de las ventas rellenando la tabla
+                #         1 id     2 name       3 pvp    4 canti   5 total
+                # [['5', '11', 'Mobile', '185.36€', '1', '185.36€']]
+                # rellena la tabla
+                for row, sale in enumerate(sales):
+                    print(sale)
+                    globals.ui.tableInvoiceProducts.setItem(row, 0, QtWidgets.QTableWidgetItem(str(sale.product_id))) # 2
                     globals.ui.tableInvoiceProducts.item(row, 0).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
-                    globals.ui.tableInvoiceProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(sale[3]))
-                    globals.ui.tableInvoiceProducts.setItem(row, 2, QtWidgets.QTableWidgetItem(sale[4] + '€'))
-                    globals.ui.tableInvoiceProducts.setItem(row, 3, QtWidgets.QTableWidgetItem(sale[5]))
-                    globals.ui.tableInvoiceProducts.setItem(row, 4, QtWidgets.QTableWidgetItem(sale[6] + '€'))
+                    globals.ui.tableInvoiceProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(str(sale.product_name))) # 3
+                    globals.ui.tableInvoiceProducts.setItem(row, 2, QtWidgets.QTableWidgetItem(str(sale.product_price) + '€')) # 4
+                    globals.ui.tableInvoiceProducts.setItem(row, 3, QtWidgets.QTableWidgetItem(str(sale.quantity)))# 5
+                    globals.ui.tableInvoiceProducts.setItem(row, 4, QtWidgets.QTableWidgetItem(str(sale.subtotal) + '€')) # 6
                     globals.ui.tableInvoiceProducts.item(row, 1).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                     globals.ui.tableInvoiceProducts.item(row, 2).setTextAlignment(
                         QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)

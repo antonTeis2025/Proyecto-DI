@@ -7,10 +7,8 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtWidgets import QMessageBox
 
 import globals
-from conexion import Conexion
 from models import Customer
 from services.customer_service import CustomerService
-from services.location_service import LocationService
 
 
 def rellenarTextos(customer: Customer):
@@ -330,6 +328,13 @@ class Customers:
                     mbox.exec()
                 Customers.loadTablecli(True)
         except Exception as e:
+            mbox = QtWidgets.QMessageBox()
+            mbox.setWindowTitle("Warning")
+            mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+            mbox.setText(f"Error. {e}")
+            mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes)
+            mbox.setStyleSheet(globals.mboxStyleSheet)
+            mbox.exec()
             print("error en saveCli ", e)
 
     def cleanCli(self):

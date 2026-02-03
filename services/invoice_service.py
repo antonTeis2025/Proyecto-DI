@@ -1,5 +1,5 @@
 from typing import List, Dict, Optional
-from datetime import date
+from datetime import date, datetime
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from database import get_session
@@ -10,59 +10,63 @@ from models.Product import Product
 class InvoiceService:
 
     @staticmethod
-    def create(customer_id: int, items: List[Dict]) -> Invoice:
+    def create(customer_dni: str, items) -> Invoice:
         """
         Crea factura y descuenta stock atómicamente.
         items structure: [{'product_id': 1, 'quantity': 2}, ...]
         """
-        if not items:
-            raise ValueError("La factura debe tener al menos un producto.")
+        # if not items:
+        #    raise ValueError("La factura debe tener al menos un producto.")
 
         with get_session() as session:
             # 1. Cabecera
-            invoice = Invoice(customer_id=customer_id, date=date.today())
+            invoice = Invoice(
+                customer_dni=customer_dni,
+                date=datetime.now().strftime("%d/%m/%Y-%H:%M")
+            )
             session.add(invoice)
 
-            # 2. Detalles y Stock
-            for item in items:
-                p_id = item['product_id']
-                qty = item['quantity']
+            # if items is not None:
+            #    # 2. Detalles y Stock
+            #    for item in items:
+            #        p_id = item['product_id']
+            #        qty = item['quantity']
 
-                product = session.get(Product, p_id)
+            #        product = session.get(Product, p_id)
 
-                if not product:
-                    # No hace falta rollback explícito si lanzas excepción,
-                    # el Context Manager de Python (__exit__) debería encargarse,
-                    # pero si quieres ser explícito, hazlo antes del raise.
-                    session.rollback()
-                    raise ValueError(f"Producto ID {p_id} no existe")
+            #        if not product:
+                        # No hace falta rollback explícito si lanzas excepción,
+                        # el Context Manager de Python (__exit__) debería encargarse,
+                        # pero si quieres ser explícito, hazlo antes del raise.
+            #            session.rollback()
+            #            raise ValueError(f"Producto ID {p_id} no existe")
 
-                if product.stock < qty:
-                    # --- CORRECCIÓN AQUÍ ---
-                    # 1. Capturamos los datos en variables locales
-                    p_name = product.name
-                    p_stock = product.stock
+            #        if product.stock < qty:
+                        # --- CORRECCIÓN AQUÍ ---
+                        # 1. Capturamos los datos en variables locales
+            #            p_name = product.name
+            #            p_stock = product.stock
 
-                    # 2. Hacemos Rollback (Limpiamos la sesión)
-                    session.rollback()
+                        # 2. Hacemos Rollback (Limpiamos la sesión)
+            #            session.rollback()
 
-                    # 3. Lanzamos el error usando las variables locales, NO el objeto SQLAlchemy
-                    raise ValueError(f"Stock insuficiente para '{p_name}'. Stock actual: {p_stock}")
+                        # 3. Lanzamos el error usando las variables locales, NO el objeto SQLAlchemy
+            #            raise ValueError(f"Stock insuficiente para '{p_name}'. Stock actual: {p_stock}")
 
-                product.stock -= qty
+            #        product.stock -= qty
 
-                # Crear detalle (Snapshot de precio)
-                detail = InvoiceDetail(
-                    product_id=p_id,
-                    quantity=qty,
-                    unit_price=product.unit_price,
-                    invoice=invoice
-                )
-                session.add(detail)
+                    # Crear detalle (Snapshot de precio)
+            #        detail = InvoiceDetail(
+            #            product_id=p_id,
+            #            quantity=qty,
+            #            unit_price=product.unit_price,
+            #            invoice=invoice
+            #        )
+            #        session.add(detail)
 
             # 3. Guardar y Calcular
             session.flush()  # Envía SQL a la BD para generar IDs, pero no commitea
-            invoice.calculate_totals()  # Método de tu modelo que suma subtotal/iva
+            # invoice.calculate_totals()  # Método de tu modelo que suma subtotal/iva
 
             session.commit()
 
@@ -71,8 +75,6 @@ class InvoiceService:
             # sin dar error de "Detached Instance"
             stmt = (
                 select(Invoice)
-                .options(selectinload(Invoice.details).selectinload(InvoiceDetail.product),
-                         selectinload(Invoice.customer))
                 .where(Invoice.id == invoice.id)
             )
             return session.scalar(stmt)

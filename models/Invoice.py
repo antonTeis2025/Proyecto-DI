@@ -31,9 +31,9 @@ class Invoice(Base):
     customer: Mapped["Customer"] = relationship("Customer")
     details: Mapped[List["InvoiceDetail"]] = relationship("InvoiceDetail", back_populates="invoice")
 
-    subtotal: Mapped[float] = mapped_column(Float, default=0.0)
-    iva: Mapped[float] = mapped_column(Float, default=0.0)
-    total: Mapped[float] = mapped_column(Float, default=0.0)
+    subtotal: float = 0.0
+    iva: float = 0.0
+    total: float = 0.0
 
     def calculate_totals(self):
         self.subtotal = sum(d.subtotal for d in self.details) if self.details else 0.0

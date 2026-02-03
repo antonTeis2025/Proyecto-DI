@@ -477,6 +477,7 @@ class Conexion:
                 while query.next():
                     row = [str(query.value(i)) for i in range(query.record().count())]
                     records.append(row)
+            print(records)
             return records
         except Exception as e:
             print("error en loadSalesByFac", e)
