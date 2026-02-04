@@ -7,6 +7,8 @@ import os
 
 from conexion import *
 from globals import subtotal
+from services.customer_service import CustomerService
+from services.invoice_service import InvoiceService
 
 
 class Reports:
@@ -186,6 +188,7 @@ class Reports:
     # ============================================================
     @classmethod
     def reportInvoices(cls):
+        print("-------------------------------------------------------- ejecutando: reportInvoices")
         try:
             cls.create_canvas("reportInvoices")
 
@@ -195,18 +198,20 @@ class Reports:
             cls.topreport(titulo + " Nº " + globals.ui.lblNumFac.text())
 
             if dni != "00000000T":
-                record = Conexion.dataOneCustomer(dni)
-
+                cliente = CustomerService.get_by_dni(dni)
+                # print("---------------------- reportInvoices  (cliente) ----------------------")
+                # print(record) ['32516522L', '20/01/2022', 'Domínguez Soto', 'Lucía', 'lucía.domínguez@example.com', '647009029', 'Calle Luna 33', 'Cádiz', 'Cádiz', 'electronic', 'True']
+                # print("-----------------------------------------------------------------------")
                 cls.c.setFont("Helvetica-Bold", 10)
                 cls.c.drawString(220, 785, "Customer")
 
                 cls.c.setFont("Helvetica", 9)
 
-                cls.c.drawString(220, 755, "DNI: " + record[0])
-                cls.c.drawString(220, 745, "Apellidos: " + record[2])
-                cls.c.drawString(220, 735, "Nombre: " + record[3])
-                cls.c.drawString(220, 725, "Dirección: " + record[6])
-                cls.c.drawString(220, 715, "Localidad: " + record[8] + " Provincia: " + record[7])
+                cls.c.drawString(220, 755, "DNI: " + cliente.dni)
+                cls.c.drawString(220, 745, "Apellidos: " + cliente.surname)
+                cls.c.drawString(220, 735, "Nombre: " + cliente.name)
+                cls.c.drawString(220, 725, "Dirección: " + cliente.address)
+                cls.c.drawString(220, 715, "Localidad: " + cliente.city_name + " Provincia: " + cliente.province_name)
 
                 cls.c.line(215, 705, 215, 800)
                 cls.c.line(215, 705, 360, 705)
@@ -225,12 +230,17 @@ class Reports:
             cls.c.line(50, 695, 525, 695)
 
 
-            records = Conexion.loadSalesByFac(int(globals.ui.lblNumFac.text()))
-            print(records)
+            # records = Conexion.loadSalesByFac(int(globals.ui.lblNumFac.text()))
+
+            factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
+
             x = 55
             y = 630
 
-            for record in records:
+            for detail in factura.details:
+                # print("---------------------- reportInvoices (productos) ----------------------")
+                # print(record)       ['14', '5', '11', 'Mobile', '185.36', '1', '185.36']
+                # print("------------------------------------------------------------------------")
                 if y <= 100:
                     cls.c.showPage()
                     cls.topreport("Report Products")
@@ -246,13 +256,14 @@ class Reports:
                     y = 630
 
                 cls.c.setFont("Helvetica", 7)
-                cls.c.drawString(x, y, str(record[2]))
-                cls.c.drawString(x + 65, y, record[3])
-                cls.c.drawString(x + 215, y, str(record[4]) + "€")
-                cls.c.drawString(x + 305, y, str(record[5]))
-                cls.c.drawString(x + 375, y, str(record[6]) + "€")
+                cls.c.drawString(x, y, str(detail.product_id))
+                cls.c.drawString(x + 65, y, detail.product_name)
+                cls.c.drawString(x + 215, y, str(detail.product_price) + "€")
+                cls.c.drawString(x + 305, y, str(detail.quantity))
+                cls.c.drawString(x + 375, y, str(detail.subtotal) + "€")
                 y -= 15
-            subtotal = sum([float(record[6]) for record in records])
+
+            subtotal = sum([float(detail.subtotal) for detail in factura.details])
             iva = subtotal * 0.21
             total = subtotal + iva
             cls.c.setFont("Helvetica-Bold", 10)

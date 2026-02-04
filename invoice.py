@@ -253,6 +253,7 @@ class Invoice:
 
     @staticmethod
     def cellChangedSales(item):
+        print("cell changed sales:")
         try:
             iva = 0.21
             row = item.row()

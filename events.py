@@ -4,6 +4,7 @@ import os
 import shutil
 import sys
 import time
+from csv import excel
 
 from PyQt6 import QtWidgets, QtCore, QtGui
 import zipfile
@@ -170,8 +171,20 @@ class Events:
                     writer.writerow(['DNI_NIE', 'AddData', 'Surname', 'Name', 'eMail', 'Mobile', 'Address',
                                      'Province', 'City', 'InvoiceType', 'Active'])
                     for record in records:
-                        prov = LocationService.get_province_by_municipality(record.municipality_id)
-                        writer.writerow(f"{record.dni}, {record.addData}, {record.surname}, {record.name}, {record.email}, {record.mobile}, {record.address}, {prov.name},{record.municipality_id} ,{record.invoice_type}, {record.active}")
+                        # writer.writerow(f"{str(record.dni)}, {str(record.add_data)}, {str(record.surname)}, {str(record.name)}, {str(record.email)}, {str(record.mobile)}, {str(record.address)}, {str(record.province_name)},{str(record.city_name)} ,{str(record.invoice_type)}, {str(record.historical)}")
+                        writer.writerow([
+                            str(record.dni),
+                            str(record.add_data),
+                            str(record.surname),
+                            str(record.name),
+                            str(record.email),
+                            str(record.mobile),
+                            str(record.address),
+                            str(record.province_name),
+                            str(record.city_name),
+                            str(record.invoice_type),
+                            str(record.historical)
+                        ])
                         # writer.writerow(record)
                 shutil.move(file, directory)
                 mbox = QtWidgets.QMessageBox()

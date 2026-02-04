@@ -87,7 +87,7 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.btnBuscacli.clicked.connect(Customers.buscaCli) # r
         globals.ui.btnCleanFac.clicked.connect(Invoice.cleanInv) # r
         globals.ui.btnSaveFac.clicked.connect(Invoice.saveInvoice) # r
-        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # todo: informe facturas
+        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # r
 
         # Functions of tables
         globals.ui.tableCustomerList.clicked.connect(Customers.selectCustomer) # r
