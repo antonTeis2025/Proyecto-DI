@@ -8,9 +8,7 @@ from models.Product import Product, ProductFamily
 class ProductService:
 
     @staticmethod
-    def create(name: str, price: float, family: ProductFamily, stock: int = 0) -> Product:
-        if price < 0:
-            raise ValueError("El precio no puede ser negativo")
+    def create(name: str, price: str, family: str, stock: str = "0") -> Product:
 
         with get_session() as session:
             product = Product(name=name, unit_price=price, family=family, stock=stock)
@@ -26,6 +24,12 @@ class ProductService:
             return list(session.scalars(stmt).all())
 
     @staticmethod
+    def get_by_name(name: str) -> Optional[Product]:
+        with get_session() as session:
+            stmt = select(Product).where(Product.name == name)
+            return session.scalar(stmt)
+
+    @staticmethod
     def get_by_id(product_id: int) -> Optional[Product]:
         with get_session() as session:
             return session.get(Product, product_id)
@@ -38,9 +42,9 @@ class ProductService:
                 raise ValueError("Producto no encontrado")
 
             # Validaciones específicas antes de asignar
-            if 'unit_price' in kwargs and kwargs['unit_price'] < 0:
+            if 'unit_price' in kwargs and float(kwargs['unit_price'].split("€")[0]) < 0:
                 raise ValueError("Precio negativo no permitido")
-            if 'stock' in kwargs and kwargs['stock'] < 0:
+            if 'stock' in kwargs and int(kwargs['stock']) < 0:
                 raise ValueError("Stock negativo no permitido")
 
             for key, value in kwargs.items():

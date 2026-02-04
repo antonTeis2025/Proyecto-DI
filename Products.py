@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import QMessageBox
 import globals
 from conexion import Conexion
 import events
+from services.product_service import ProductService
 
 
 class Products:
@@ -25,10 +26,17 @@ class Products:
             mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
             mbox.setStyleSheet(globals.mboxStyleSheet)
             if mbox.exec() == QtWidgets.QMessageBox.StandardButton.Yes:
-                newProduct = [globals.ui.txtNameProduct.text(), globals.ui.cmbFamilyProduct.currentText(),
-                              globals.ui.txtStockProduct.text(), globals.ui.txtUnitPrice.text()]
+                #newProduct = [globals.ui.txtNameProduct.text(), globals.ui.cmbFamilyProduct.currentText(),
+                #              globals.ui.txtStockProduct.text(), globals.ui.txtUnitPrice.text()]
 
-                if  Conexion.addProduct(newProduct) and len(newProduct) > 3:
+                producto = ProductService.create(
+                    name = globals.ui.txtNameProduct.text(),
+                    family = globals.ui.cmbFamilyProduct.currentText(),
+                    stock = globals.ui.txtStockProduct.text(),
+                    price = globals.ui.txtUnitPrice.text() + "€"
+                )
+
+                if  producto:
                     mbox = QtWidgets.QMessageBox()
                     mbox.setWindowTitle("Information")
                     mbox.setIcon(QtWidgets.QMessageBox.Icon.Information)
@@ -46,21 +54,24 @@ class Products:
                     mbox.exec()
                 Products.loadTableProducts()
         except Exception as e:
-            print("error en saveCli ", e)
+            print("error en saveProduct ", e)
 
     @staticmethod
     def loadTableProducts():
         try:
-            listTabCustomers = Conexion.listProducts()
+            #print("load table productos")
+            # listTabCustomers = Conexion.listProducts()
+            productos = ProductService.get_all()
             index = 0
             globals.ui.tableProducts.setSortingEnabled(False)
-            for record in listTabCustomers:
+            for record in productos:
+                # [11, 'Mobile', '231', 'Electronic', '185.36€']
                 globals.ui.tableProducts.setRowCount(index + 1)
-                globals.ui.tableProducts.setItem(index, 0, QtWidgets.QTableWidgetItem(str(record[0])))
-                globals.ui.tableProducts.setItem(index, 1, QtWidgets.QTableWidgetItem(str(record[1])))
-                globals.ui.tableProducts.setItem(index, 2, QtWidgets.QTableWidgetItem(str(record[2])))
-                globals.ui.tableProducts.setItem(index, 3, QtWidgets.QTableWidgetItem(str(record[3])))
-                globals.ui.tableProducts.setItem(index, 4, QtWidgets.QTableWidgetItem(str(record[4])))
+                globals.ui.tableProducts.setItem(index, 0, QtWidgets.QTableWidgetItem(str(record.id)))
+                globals.ui.tableProducts.setItem(index, 1, QtWidgets.QTableWidgetItem(str(record.name)))
+                globals.ui.tableProducts.setItem(index, 2, QtWidgets.QTableWidgetItem(str(record.stock)))
+                globals.ui.tableProducts.setItem(index, 3, QtWidgets.QTableWidgetItem(str(record.family)))
+                globals.ui.tableProducts.setItem(index, 4, QtWidgets.QTableWidgetItem(str(record.unit_price)))
                 globals.ui.tableProducts.item(index, 0).setTextAlignment(
                     QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
                 globals.ui.tableProducts.item(index, 1).setTextAlignment(
@@ -82,12 +93,16 @@ class Products:
 
             row = globals.ui.tableProducts.selectedItems()
             data = [dato.text() for dato in row]
-            dataComplet = Conexion.dataOneProduct(data[1])
-            globals.ui.lblCode.setText(str(dataComplet[0]))
-            globals.ui.txtNameProduct.setText(dataComplet[1])
-            globals.ui.txtStockProduct.setText(dataComplet[2])
-            globals.ui.cmbFamilyProduct.setCurrentText(dataComplet[3])
-            globals.ui.txtUnitPrice.setText(dataComplet[4])
+            # print(data): ['14', 'Pantalon', '25', 'Clothes', '3.35€']
+            # dataComplet = Conexion.dataOneProduct(data[1])
+
+            producto = ProductService.get_by_id(int(data[0]))
+
+            globals.ui.lblCode.setText(str(producto.id))
+            globals.ui.txtNameProduct.setText(str(producto.name))
+            globals.ui.txtStockProduct.setText(str(producto.stock))
+            globals.ui.cmbFamilyProduct.setCurrentText(str(producto.family))
+            globals.ui.txtUnitPrice.setText(str(producto.unit_price))
 
             globals.ui.txtNameProduct.setEnabled(False)
             globals.ui.txtNameProduct.setStyleSheet('background-color: rgb(255, 255, 220);')
@@ -118,12 +133,21 @@ class Products:
             mbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
             mbox.setStyleSheet(globals.mboxStyleSheet)
             if mbox.exec() == QtWidgets.QMessageBox.StandardButton.Yes:
-                dni = globals.ui.txtNameProduct.text()
-                modifProduct = [globals.ui.txtNameProduct.text(), globals.ui.txtStockProduct.text(),
-                            globals.ui.cmbFamilyProduct.currentText(), globals.ui.txtUnitPrice.text()
-                            ]
+                # modifProduct = [globals.ui.txtNameProduct.text(), globals.ui.txtStockProduct.text(),
+                #            globals.ui.cmbFamilyProduct.currentText(), globals.ui.txtUnitPrice.text()
+                #            ]
 
-                if Conexion.modifyProduct(modifProduct):
+
+                id = int(ProductService.get_by_name(globals.ui.txtNameProduct.text()).id)
+                product = ProductService.update(
+                    product_id = id,
+                    name = globals.ui.txtNameProduct.text(),
+                    stock = globals.ui.txtStockProduct.text(),
+                    family = globals.ui.cmbFamilyProduct.currentText(),
+                    unit_price = globals.ui.txtUnitPrice.text()
+                )
+
+                if product is not None:
                     mbox = QtWidgets.QMessageBox()
                     mbox.setWindowTitle("Information")
                     mbox.setIcon(QtWidgets.QMessageBox.Icon.Information)
@@ -157,8 +181,14 @@ class Products:
             mbox.setStyleSheet(globals.mboxStyleSheet)
             resultExec = mbox.exec()
             if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
+
                 name = globals.ui.txtNameProduct.text()
-                if Conexion.delProduct(name):
+
+                producto = ProductService.get_by_name(name)
+
+                deleted = ProductService.delete(int(producto.id))
+
+                if deleted is not None:
                     mbox1 = QtWidgets.QMessageBox()
                     mbox1.setWindowTitle("Information")
                     mbox1.setIcon(QtWidgets.QMessageBox.Icon.Information)

@@ -3,6 +3,7 @@ import styles
 from Products import Products
 from conexion import *
 from invoice import Invoice
+from models.Product import ProductFamily
 from venAux import *
 import events
 from customers import *
@@ -102,16 +103,16 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.cmbFamilyProduct.addItems(family)
         globals.ui.txtNameProduct.editingFinished.connect(lambda: Customers.capitalizar(globals.ui.txtNameProduct.text(), globals.ui.txtNameProduct))
 
-        globals.ui.btnSaveProduct.clicked.connect(Products.saveProduct) # todo
+        globals.ui.btnSaveProduct.clicked.connect(Products.saveProduct) # r
         globals.ui.btnCleaProduct.clicked.connect(Products.cleanProduct)
-        globals.ui.btnModifyProduct.clicked.connect(Products.modifyProduct) # todo
-        globals.ui.btnDeleteProduct.clicked.connect(Products.delProduct) # todo
+        globals.ui.btnModifyProduct.clicked.connect(Products.modifyProduct) # r
+        globals.ui.btnDeleteProduct.clicked.connect(Products.delProduct) # r
 
 
 
-        Products.loadTableProducts() # todo
+        Products.loadTableProducts() # r
         Events.resizeTabProducts(self)
-        globals.ui.tableProducts.clicked.connect(Products.selectProduct) # todo
+        globals.ui.tableProducts.clicked.connect(Products.selectProduct) # r
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

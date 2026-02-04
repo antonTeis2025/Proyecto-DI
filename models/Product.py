@@ -36,14 +36,14 @@ class Product(Base):
     @validates('unit_price')
     def validate_price(self, key, price):
         """Asegura que el precio nunca sea negativo"""
-        if price < 0:
+        if float(price.split("€")[0]) < 0:
             raise ValueError(f"El precio no puede ser negativo: {price}")
         return price
 
     @validates('stock')
     def validate_stock(self, key, stock_value):
         """Asegura que el stock sea un entero positivo"""
-        if stock_value < 0:
+        if int(stock_value) < 0:
              # Opcional: podrías permitir stock negativo si admites "backorders"
              raise ValueError("El stock no puede ser negativo")
         return stock_value

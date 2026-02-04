@@ -268,7 +268,8 @@ class Invoice:
 
             # Columna 0 entonces buscar producto y rellenar nombre y precio
             if col == 0:
-                data = conexion.Conexion.selectProduct(value)
+                data = conexion.Conexion.selectProduct(value) # selecciona producto por ID
+                # [15, 'Jamon Serrano', '21', 'Foods', '55.4€']
                 if data:
                     globals.ui.tableInvoiceProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(str(data[1])))
                     globals.ui.tableInvoiceProducts.setItem(row, 2, QtWidgets.QTableWidgetItem(str(data[4])))

@@ -428,6 +428,9 @@ class Conexion:
                 while query.next():
                     for i in range(query.record().count()):
                         records.append(query.value(i))
+            print("--DEBUG--")
+            print(records)
+            print("--DEBUG--")
             return records
         except Exception as e:
             print("error selectProduct", e)
