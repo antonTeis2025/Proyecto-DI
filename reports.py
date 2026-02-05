@@ -75,7 +75,8 @@ class Reports:
         try:
             cls.create_canvas("reportCustomers")
 
-            records = Conexion.listCustomers(False)
+            # records = Conexion.listCustomers(False)
+            customers = CustomerService.get_all(active_only = False)
             items = ["DNI_NIE", "SURNAME", "NAME", "MOBILE", "CITY", "INVOICE TYPE", "STATE"]
 
             cls.topreport("Report Customers")
@@ -94,7 +95,7 @@ class Reports:
             x = 55
             y = 630
 
-            for record in records:
+            for customer in customers:
                 if y <= 90:
                     cls.c.showPage()
                     cls.topreport("Report Customers")
@@ -112,14 +113,17 @@ class Reports:
                     y = 630
 
                 cls.c.setFont("Helvetica", 7)
-                dni = '****' + record[0][4:7] + '**'
+                dni = '****' + str(customer.dni)[4:7] + '**' # dni
+                #print("DEBUG: reportCustomers --------------------------------")
+                #print(record) ['Z7111425Z', '14/11/2022', 'Vega Molina', 'Isabel', 'isabel.vega@example.com', '611648114', 'Calle Sol 26', 'Zaragoza', 'Zaragoza', 'electronic', 'True']
+                #print("-------------------------------------------------------")
                 cls.c.drawString(x, y, dni)
-                cls.c.drawString(x + 65, y, record[2])
-                cls.c.drawString(x + 165, y, record[3])
-                cls.c.drawString(x + 215, y, record[5])
-                cls.c.drawString(x + 265, y, record[8])
-                cls.c.drawString(x + 345, y, record[9].capitalize())
-                cls.c.drawString(x + 425, y, "Activo" if record[10] == "True" else "Baja")
+                cls.c.drawString(x + 65, y, str(customer.surname)) # apell
+                cls.c.drawString(x + 165, y, str(customer.name)) # nombre
+                cls.c.drawString(x + 215, y, str(customer.mobile)) # tlf
+                cls.c.drawString(x + 265, y, str(customer.city_name))  # cuidad
+                cls.c.drawString(x + 345, y, str(customer.invoice_type).capitalize()) # t factura
+                cls.c.drawString(x + 425, y, "Activo" if str(customer.invoice_type) == "True" else "Baja") # historical
 
                 y -= 15
 
