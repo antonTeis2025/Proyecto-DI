@@ -10,6 +10,7 @@ from conexion import Conexion
 from reports import Reports
 from services.customer_service import CustomerService
 from services.invoice_service import InvoiceService
+from services.product_service import ProductService
 
 
 class Invoice:
@@ -163,6 +164,7 @@ class Invoice:
             # Pone to.do a 0 y carga los datos que están en la propia fila
             globals.subtotal = 0
             globals.sales = []
+            globals.ui.lblStatusInv.setText("Activa")
             row = globals.ui.tableInvoiceList.selectedItems()
             data = [dato.text() for dato in row]
             globals.ui.lblNumFac.setText(data[0])
@@ -176,11 +178,11 @@ class Invoice:
             # Carga las ventas de la factura seleccionada
             sales = InvoiceService.get_by_id(int(data[0])).details
 
-            if sales != []: # Si existen ventas
+            if sales != []: # Si existen ventas -> se bloqueara la edicion (factura inactiva)
                 Invoice.isSaleAlreadyDone = True
                 Invoice.activeSales() # calcula las columnas
-                globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-
+                globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers) # hace que no se pueda editar la tabla
+                globals.ui.lblStatusInv.setText("Cerrada")
                 # Va iterando los datos de las ventas rellenando la tabla
                 #         1 id     2 name       3 pvp    4 canti   5 total
                 # [['5', '11', 'Mobile', '185.36€', '1', '185.36€']]
@@ -204,10 +206,13 @@ class Invoice:
                                                             color: black;
                                                        }
                                                        """)
-            else:
+            else: # si no tiene ventas, permite la edicion
                 globals.ui.tableInvoiceProducts.setEditTriggers(
                     QAbstractItemView.EditTrigger.AllEditTriggers)
                 Invoice.activeSales()
+
+                # globals.ui.tableInvoiceProducts.itemChanged.connect()
+
         except Exception as e:
             print("error en selectInvoice", e)
 
@@ -269,12 +274,21 @@ class Invoice:
 
             # Columna 0 entonces buscar producto y rellenar nombre y precio
             if col == 0:
-                data = conexion.Conexion.selectProduct(value) # selecciona producto por ID
+                # data = conexion.Conexion.selectProduct(value) # selecciona producto por ID
                 # [15, 'Jamon Serrano', '21', 'Foods', '55.4€']
-                if data:
-                    globals.ui.tableInvoiceProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(str(data[1])))
-                    globals.ui.tableInvoiceProducts.setItem(row, 2, QtWidgets.QTableWidgetItem(str(data[4])))
+
+                producto = ProductService.get_by_id(value) # busca un producto por ID
+                if producto:
+                    globals.ui.tableInvoiceProducts.setItem(row, 1, QtWidgets.QTableWidgetItem(str(producto.name)))
+                    globals.ui.tableInvoiceProducts.setItem(row, 2, QtWidgets.QTableWidgetItem(str(producto.unit_price)))
+                    globals.ui.tableInvoiceProducts.setItem(row, 3, QtWidgets.QTableWidgetItem(str(1))) # Amount 1 por defecto
                     globals.ui.tableInvoiceProducts.item(row, 2).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+                    # Calcula el total
+                    total = float(producto.unit_price.split("€")[0]) * 1
+                    globals.ui.tableInvoiceProducts.setItem(row, 4, QtWidgets.QTableWidgetItem(str(total) + "€")) # Amount 1 por defecto
+
+
                 else:
                     mbox = QtWidgets.QMessageBox()
                     mbox.setWindowTitle("Invoice")
@@ -283,6 +297,7 @@ class Invoice:
                     mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok)
                     mbox.setStyleSheet(globals.mboxStyleSheet)
                     mbox.exec()
+                    globals.ui.tableInvoiceProducts.setItem(row, 0, QtWidgets.QTableWidgetItem("")) # Limpia el ID
             # Columna 3 → calcular total
             elif col == 3:
                 cantidad = float(value)
@@ -344,26 +359,26 @@ class Invoice:
 
     @staticmethod
     def saveSales():
-        if globals.sales:
-            if Conexion.existeFacturaSales(idFac = int(globals.ui.lblNumFac.text())):
-                # imprimir factura
-                Reports.reportInvoices()
-            else:
-                mbox = QtWidgets.QMessageBox()
-                mbox.setWindowTitle("Invoice")
-                mbox.setIcon(QtWidgets.QMessageBox.Icon.Question)
-                mbox.setText("Do you want to save this invoice?")
-                mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
-                mbox.setStyleSheet(globals.mboxStyleSheet)
-                resultExec = mbox.exec()
-                if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
-                    conexion.Conexion.saveSales(globals.sales)
-                    globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-                    globals.ui.tableInvoiceProducts.setStyleSheet("""
+        factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
+        if factura:
+    # imprimir factura
+            Reports.reportInvoices( idfac = factura.id )
+        else:
+            mbox = QtWidgets.QMessageBox()
+            mbox.setWindowTitle("Invoice")
+            mbox.setIcon(QtWidgets.QMessageBox.Icon.Question)
+            mbox.setText("Do you want to save this invoice?")
+            mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            mbox.setStyleSheet(globals.mboxStyleSheet)
+            resultExec = mbox.exec()
+            if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
+                conexion.Conexion.saveSales(globals.sales)
+                globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+                globals.ui.tableInvoiceProducts.setStyleSheet("""
                                                            QTableWidget::item {
                                                                 background-color: rgb(255, 255, 202); 
                                                                 color: black;
                                                            }
                                                            """)
-                    #imprimir factura
-                    Reports.reportInvoices()
+                #imprimir factura
+                Reports.reportInvoices()

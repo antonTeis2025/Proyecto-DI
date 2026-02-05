@@ -5,10 +5,10 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 import os
 
-from conexion import *
 from globals import subtotal
 from services.customer_service import CustomerService
 from services.invoice_service import InvoiceService
+from services.product_service import ProductService
 
 
 class Reports:
@@ -141,7 +141,8 @@ class Reports:
         try:
             cls.create_canvas("reportProducts")
 
-            records = Conexion.listProducts()
+            # records = Conexion.listProducts()
+            products = ProductService.get_all()
             items = ["CODE", "NAME", "STOCK", "FAMILY", "UNIT PRICE"]
 
             cls.topreport("Report Products")
@@ -158,7 +159,11 @@ class Reports:
             x = 55
             y = 630
 
-            for record in records:
+            for product in products:
+                # print("DBG: reportProducts -------------------------------------------")
+                # print(record)  [17, 'Pan', '10', 'Foods', '1€']
+                # print("---------------------------------------------------------------")
+
                 if y <= 90:
                     cls.c.showPage()
                     cls.topreport("Report Products")
@@ -174,11 +179,11 @@ class Reports:
                     y = 630
 
                 cls.c.setFont("Helvetica", 7)
-                cls.c.drawString(x, y, str(record[0]))
-                cls.c.drawString(x + 65, y, record[1])
-                cls.c.drawString(x + 215, y, str(record[2]))
-                cls.c.drawString(x + 295, y, record[3])
-                cls.c.drawString(x + 370, y, str(record[4]))
+                cls.c.drawString(x, y, str(product.id))
+                cls.c.drawString(x + 65, y, str(product.name))
+                cls.c.drawString(x + 215, y, str(product.stock))
+                cls.c.drawString(x + 295, y, str(product.family))
+                cls.c.drawString(x + 370, y, str(product.unit_price))
                 y -= 15
 
             cls.c.save()
@@ -191,15 +196,18 @@ class Reports:
     # REPORT INVOICES
     # ============================================================
     @classmethod
-    def reportInvoices(cls):
+    def reportInvoices(cls, idfac):
         print("-------------------------------------------------------- ejecutando: reportInvoices")
         try:
+
+            factura = InvoiceService.get_by_id(int(idfac))
+
             cls.create_canvas("reportInvoices")
 
-            dni = globals.ui.txtDniCustomerFac.text().strip()
+            dni =  factura.customer_dni
             titulo = "Factura Simple" if dni == "00000000T" else "Factura"
 
-            cls.topreport(titulo + " Nº " + globals.ui.lblNumFac.text())
+            cls.topreport(titulo + " Nº " + str(factura.id))
 
             if dni != "00000000T":
                 cliente = CustomerService.get_by_dni(dni)
@@ -236,7 +244,6 @@ class Reports:
 
             # records = Conexion.loadSalesByFac(int(globals.ui.lblNumFac.text()))
 
-            factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
 
             x = 55
             y = 630

@@ -37,7 +37,7 @@ class Main(QtWidgets.QMainWindow):
         varcli = True # Solo muestra clientes True
         Conexion.db_conexion() # Esto seguramente se puede sacar
         Customers.loadTablecli(varcli) # Refactorizao
-        Invoice.loadTableFac() # todo
+        Invoice.loadTableFac() # todo: crear boton eliminar fila
         Events.resizeTabInvProducts()
         Events.resizeTabCustomer(self)
         Events.resizeTabInv()
@@ -47,9 +47,8 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.actionAbout.triggered.connect(Events.messageAbout)
         globals.ui.actionBackup.triggered.connect(Events.saveBackup)
         globals.ui.actionRestore_Backup.triggered.connect(Events.restoreBackup)
-        globals.ui.menuExport_Data_csv.triggered.connect(Events.exportXlsCustomers) # todo
-        # -- TODO
-        globals.ui.actionCustomer_Report.triggered.connect(Reports.reportCustomers)
+        globals.ui.menuExport_Data_csv.triggered.connect(Events.exportXlsCustomers) # r
+        globals.ui.actionCustomer_Report.triggered.connect(Reports.reportCustomers) # r
         globals.ui.actionProducts_Report.triggered.connect(Reports.reportProducts)
 
 
@@ -87,7 +86,7 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.btnBuscacli.clicked.connect(Customers.buscaCli) # r
         globals.ui.btnCleanFac.clicked.connect(Invoice.cleanInv) # r
         globals.ui.btnSaveFac.clicked.connect(Invoice.saveInvoice) # r
-        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # r
+        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # todo
 
         # Functions of tables
         globals.ui.tableCustomerList.clicked.connect(Customers.selectCustomer) # r
