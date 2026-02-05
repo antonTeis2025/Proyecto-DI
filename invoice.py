@@ -1,12 +1,15 @@
 import datetime
+from itertools import product
 
 from PyQt6 import QtWidgets, QtCore, QtGui
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QAbstractItemView
+from sqlalchemy.engine import row
 
 import conexion
 import globals
 from conexion import Conexion
+from models import InvoiceDetail
 from reports import Reports
 from services.customer_service import CustomerService
 from services.invoice_service import InvoiceService
@@ -75,8 +78,11 @@ class Invoice:
         if dni == "":
             dni = "00000000T"
         # Conseguir el cliente de la BBDD
-        cliente = CustomerService.get_by_dni(dni)
 
+        cliente = CustomerService.get_by_dni(dni)
+        # print("DBG---------------------------")
+        # print(cliente)
+        # print("DBG---------------------------")
         if cliente:
             # Poner DNI en la caja de texto
             globals.ui.txtDniCustomerFac.setText(dni)
@@ -359,9 +365,13 @@ class Invoice:
 
     @staticmethod
     def saveSales():
-        factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
-        if factura:
-    # imprimir factura
+        try:
+            factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
+        except:
+            factura = None
+
+        if factura is not None:
+            # imprimir factura si existe
             Reports.reportInvoices( idfac = factura.id )
         else:
             mbox = QtWidgets.QMessageBox()
@@ -372,7 +382,36 @@ class Invoice:
             mbox.setStyleSheet(globals.mboxStyleSheet)
             resultExec = mbox.exec()
             if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
-                conexion.Conexion.saveSales(globals.sales)
+
+                # Guardar factura
+                # conexion.Conexion.saveSales(globals.sales)
+                factura = None
+                try:
+                    factura = InvoiceService.create( customer_dni = globals.ui.txtDniCustomerFac.text(), items = None )
+                except Exception as error:
+                    print("Error al salvar la factura: ", error)
+
+
+                # Guardar sus productos recorriendo la tabla
+                productos = Invoice.getInvoiceProducts()
+                # todo: implementar esto
+                for producto in productos:
+                    if producto != productos[productos.count()-1]:
+                        try:
+                            InvoiceService.add_product(
+                                id_factura = factura.id,
+                                producto = InvoiceDetail(
+                                    invoice_id = factura.id,
+                                    product_id = int(producto.Code),
+                                    product_name = producto.Name,
+                                    product_price = str(producto.Price),
+                                    quantity = producto.Amount,
+                                    subtotal = float(str(producto.Total).split("€")[0]),
+                                ),
+                            )
+                        except Exception as error:
+                            print("Error al salvar la venta: ", error)
+
                 globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
                 globals.ui.tableInvoiceProducts.setStyleSheet("""
                                                            QTableWidget::item {
@@ -380,5 +419,30 @@ class Invoice:
                                                                 color: black;
                                                            }
                                                            """)
+
                 #imprimir factura
-                Reports.reportInvoices()
+                Reports.reportInvoices( idfac = factura.id )
+
+    @staticmethod
+    def getInvoiceProducts():
+
+        lista_ventas = []
+
+        tabla = globals.ui.tableInvoiceProducts
+
+        datos_tabla = []
+
+        for f in range(tabla.rowCount()):
+            datos_fila = {}
+            for c in range(tabla.columnCount()):
+                # Usamos el encabezado de la columna como clave del diccionario
+                header = tabla.horizontalHeaderItem(c).text()
+                item = tabla.item(f, c)
+                datos_fila[header] = item.text() if item else ""
+
+            datos_tabla.append(datos_fila)
+
+        return datos_tabla
+        # print("DBG Extract products-----------------------------------")
+        # print(datos_tabla) [{'Code': '15', 'Name': 'Jamon Serrano', 'Price': '55.4€', 'Amount': '1', 'Total': '55.4€'}, {'Code': '13', 'Name': 'Lasaña', 'Price': '2.21€', 'Amount': '1', 'Total': '2.21€'}, {'Code': '', 'Name': '', 'Price': '', 'Amount': '', 'Total': ''}]
+        # print("DBG----------------------------------------------------")

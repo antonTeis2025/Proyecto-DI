@@ -132,3 +132,16 @@ class InvoiceService:
 
             invoice.status = InvoiceStatus.INACTIVE
             session.commit()
+
+    @staticmethod
+    def add_product(id_factura: int, producto: InvoiceDetail ) -> Invoice:
+
+        factura = InvoiceService.get_by_id(id_factura)
+        if not factura:
+            raise ValueError("Factura no encontrada")
+
+        with get_session() as session:
+            factura.details.append(producto)
+            session.commit()
+            session.refresh(factura)
+            return factura
