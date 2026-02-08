@@ -53,5 +53,5 @@ class Ui_dlgAbout(object):
         dlgAbout.setWindowTitle(_translate("dlgAbout", "About"))
         self.label.setText(_translate("dlgAbout", "Empresa Teis ©"))
         self.label_2.setText(_translate("dlgAbout", " V.0.0.1"))
-        self.label_4.setText(_translate("dlgAbout", "Autor: Miguel Rodríguez Quintás"))
+        self.label_4.setText(_translate("dlgAbout", "Autor: Antón Davila Carro"))
         self.btnCloseAbout.setText(_translate("dlgAbout", "OK"))

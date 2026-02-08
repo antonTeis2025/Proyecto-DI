@@ -14,3 +14,7 @@ Iniciar el programa
 ```powersell
 python main.py
 ```
+Compilar la interfaz
+```powershell
+pyuic6 -o nombre_archivo.py nombre_archivo.ui
+```

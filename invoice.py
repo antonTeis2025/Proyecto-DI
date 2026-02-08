@@ -9,15 +9,52 @@ from sqlalchemy.engine import row
 import conexion
 import globals
 from conexion import Conexion
-from models import InvoiceDetail
+from models import InvoiceDetail, Invoice
 from reports import Reports
 from services.customer_service import CustomerService
 from services.invoice_service import InvoiceService
 from services.product_service import ProductService
 
 
-class Invoice:
+
+
+
+class Invoices:
     isSaleAlreadyDone = False
+
+    @staticmethod
+    def borrar_factura_click():
+        # 1. Identificamos qué botón envió la señal
+        boton = QtWidgets.QApplication.focusWidget()  # O mejor:
+        # Si lo prefieres más robusto:
+        # boton = globals.ui.tableInvoiceList.sender()
+
+        # Obtenemos el botón específico
+        button = QtWidgets.QApplication.instance().focusWidget()
+
+        # 2. Localizamos la posición del botón en la tabla
+        # Esto es más seguro que usar el 'index' del bucle
+        button_pos = button.mapToParent(QtCore.QPoint(0, 0))
+        index = globals.ui.tableInvoiceList.indexAt(button_pos)
+
+        if index.isValid():
+            fila = index.row()
+            # 3. Obtenemos el ID de la columna 0
+            id_registro = globals.ui.tableInvoiceList.item(fila, 0).text()
+
+            mbox = QtWidgets.QMessageBox()
+            mbox.setWindowTitle("Warning")
+            mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+            mbox.setText("Delete invoice?")
+            mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            mbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
+            mbox.setStyleSheet(globals.mboxStyleSheet)
+            resultExec = mbox.exec()
+            if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
+                # Aquí llamarías a tu backend:
+                InvoiceService.delete_invoice(id_registro)
+                Invoices.loadTableFac() # Refrescar tabla
+                Invoices.cleanInv() # Borramos los campos de texto
 
     @staticmethod
     def dataCustomer(widget):
@@ -26,14 +63,20 @@ class Invoice:
             if dni == "":
                 dni = "00000000T"
                 globals.ui.txtDniCustomerFac.setText(dni)
-            if conexion.Conexion.buscaCli(dni):
-                record = conexion.Conexion.dataOneCustomer(dni)
-                globals.ui.lblNameInv.setText(record[3] + " " + record[2])
-                globals.ui.lblInvoiceTypeInv.setText(record[9].capitalize())
-                globals.ui.lblAddressInv.setText(record[6]) if dni == "00000000T" else globals.ui.lblAddressInv.setText(
-                    record[6] + ", " + record[8] + ", " + record[7])
-                globals.ui.lblMobileInv.setText(record[5])
-                globals.ui.lblStatusInv.setText("Inactivo" if record[4] == "True" else "Activo")
+
+            cliente = CustomerService.get_by_dni(dni)
+            if cliente:
+
+                #print("DBG -----------------------------------------------")
+                #print(record) ['32516522L', '20/01/2022', 'Domínguez Soto', 'Lucía', 'lucía.domínguez@example.com', '647009029', 'Calle Luna 33', 'Cádiz', 'Cádiz', 'electronic', 'True']
+                #print("DBG -----------------------------------------------")
+
+                globals.ui.lblNameInv.setText(cliente.name + " " + cliente.surname)
+                globals.ui.lblInvoiceTypeInv.setText(cliente.invoice_type.capitalize())
+                globals.ui.lblAddressInv.setText(cliente.address) if dni == "00000000T" else globals.ui.lblAddressInv.setText(
+                    cliente.address + ", " + cliente.city_name + ", " + cliente.province_name)
+                globals.ui.lblMobileInv.setText(cliente.mobile)
+                # globals.ui.lblStatusInv.setText("Inactivo" if cliente.historical == "True" else "Activo")
                 print("Doy de alta la factura")
             else:
                 mbox = QtWidgets.QMessageBox()
@@ -43,7 +86,7 @@ class Invoice:
                 mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok)
                 mbox.setStyleSheet(globals.mboxStyleSheet)
                 mbox.exec()
-                Invoice.cleanInv()
+                Invoices.cleanInv()
                 print("No doy de alta la factura")
         except Exception as e:
             print("error en saveInvoice", e)
@@ -52,7 +95,7 @@ class Invoice:
     def checkDni():
         dni = globals.ui.txtDniCustomerFac.text().strip().upper()
         globals.ui.txtDniCustomerFac.setText(dni)
-        Invoice.dataCustomer(globals.ui.txtDniCustomerFac)
+        Invoices.dataCustomer(globals.ui.txtDniCustomerFac)
 
     @staticmethod
     def cleanInv():
@@ -66,7 +109,7 @@ class Invoice:
             globals.ui.lblAddressInv.setText("")
             globals.ui.lblMobileInv.setText("")
             globals.ui.lblStatusInv.setText("")
-            Invoice.activeSales()
+            Invoices.activeSales()
             globals.sales = []
         except Exception as e:
             print("error en cleanInv", e)
@@ -97,7 +140,7 @@ class Invoice:
                 print(f"ERROR AL CREAR FACTURA: {e}")
 
             if factura != None: # Si el proceso no falla
-                Invoice.loadTableFac(True)
+                Invoices.loadTableFac(True)
                 # Mensaje de exito
                 mbox = QtWidgets.QMessageBox()
                 mbox.setWindowTitle("Invoice")
@@ -124,7 +167,7 @@ class Invoice:
             mbox.setStyleSheet(globals.mboxStyleSheet)
             mbox.exec()
 
-        Invoice.loadTableFac(False)
+        Invoices.loadTableFac(False)
 
     @staticmethod
     def loadTableFac(showData=False):
@@ -132,6 +175,7 @@ class Invoice:
             # records = conexion.Conexion.allInvoice()
             # record: ['16', '00000000T', '26/11/2025-09:42']
             records = InvoiceService.get_all()
+            globals.ui.tableInvoiceList.setRowCount(0)
             index = 0
             for record in records:
                 if showData and record == records[0]:
@@ -150,6 +194,8 @@ class Invoice:
                 btn_del.setFixedSize(32, 32)
                 btn_del.setStyleSheet("border: none; background-color: transparent")
                 globals.ui.tableInvoiceList.setCellWidget(index, 3, btn_del)
+                # Asigno funcion del boton
+                btn_del.clicked.connect(Invoices.borrar_factura_click)
 
                 globals.ui.tableInvoiceList.item(index, 0).setTextAlignment(
                     QtCore.Qt.AlignmentFlag.AlignHCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
@@ -160,7 +206,7 @@ class Invoice:
 
                 #CREAR BOTON ELIMINAR FILA
                 index += 1
-            Invoice.checkDni()
+            Invoices.checkDni()
         except Exception as e:
             print("error en loadTableFac", e)
 
@@ -176,7 +222,7 @@ class Invoice:
             globals.ui.lblNumFac.setText(data[0])
             globals.ui.txtDniCustomerFac.setText(data[1])
             globals.ui.lblFechaFac.setText(data[2])
-            Invoice.checkDni()
+            Invoices.checkDni()
 
             #selectedSales = conexion.Conexion.loadSalesByFac(data[0])
 
@@ -185,10 +231,11 @@ class Invoice:
             sales = InvoiceService.get_by_id(int(data[0])).details
 
             if sales != []: # Si existen ventas -> se bloqueara la edicion (factura inactiva)
-                Invoice.isSaleAlreadyDone = True
-                Invoice.activeSales() # calcula las columnas
-                globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers) # hace que no se pueda editar la tabla
                 globals.ui.lblStatusInv.setText("Cerrada")
+                Invoices.isSaleAlreadyDone = True
+                Invoices.activeSales() # calcula las columnas
+                globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers) # hace que no se pueda editar la tabla
+
                 # Va iterando los datos de las ventas rellenando la tabla
                 #         1 id     2 name       3 pvp    4 canti   5 total
                 # [['5', '11', 'Mobile', '185.36€', '1', '185.36€']]
@@ -215,7 +262,7 @@ class Invoice:
             else: # si no tiene ventas, permite la edicion
                 globals.ui.tableInvoiceProducts.setEditTriggers(
                     QAbstractItemView.EditTrigger.AllEditTriggers)
-                Invoice.activeSales()
+                Invoices.activeSales()
 
                 # globals.ui.tableInvoiceProducts.itemChanged.connect()
 
@@ -259,12 +306,106 @@ class Invoice:
             # Columna 4 (total)
             globals.ui.tableInvoiceProducts.setItem(row, 4, QtWidgets.QTableWidgetItem(""))
 
+            # --- NUEVO: COLUMNA 5 (BOTÓN ELIMINAR) ---
+            # Limpiamos cualquier widget previo en la columna 5 por seguridad
+            globals.ui.tableInvoiceProducts.removeCellWidget(row, 5)
+
+
         except Exception as error:
             print("error active sales", error)
 
     @staticmethod
+    def calculate_totals():
+        try:
+            globals.subtotal = 0.0
+            iva_rate = 0.21
+
+            # Sumamos el total de todas las ventas guardadas en la lista
+            for sale in globals.sales:
+                # sale[5] es el total de la línea (ej: "150.00€")
+                globals.subtotal += float(str(sale[5]).replace('€', ''))
+
+            globals.subtotal = round(globals.subtotal, 2)
+            iva = round(globals.subtotal * iva_rate, 2)
+            total = round(globals.subtotal + iva, 2)
+
+            # Actualizamos etiquetas
+            globals.ui.lblSubTotalInv.setText(f"{globals.subtotal:.2f} €")
+            globals.ui.lblIVAInv.setText(f"{iva:.2f} €")
+            globals.ui.lblTotalInv.setText(f"{total:.2f} €")
+        except Exception as e:
+            print("Error recalculando totales:", e)
+
+    @staticmethod
+    def crear_boton_borrar(row):
+        # Doble comprobación de seguridad: Si está cerrada, no hacemos nada.
+        if globals.ui.lblStatusInv.text() == "Cerrada":
+            return
+
+        # Si ya hay un widget (un botón), no lo volvemos a crear para no gastar memoria
+        if globals.ui.tableInvoiceProducts.cellWidget(row, 5) is not None:
+            return
+
+        btn_del = QtWidgets.QPushButton()
+        btn_del.setIcon(QIcon("./img/basura.png"))
+        btn_del.setFixedSize(24, 24)
+        btn_del.setStyleSheet("border: none; background-color: transparent; cursor: pointer;")
+        btn_del.clicked.connect(Invoices.borrar_venta_click)
+
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QHBoxLayout(container)
+        layout.addWidget(btn_del)
+        layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        globals.ui.tableInvoiceProducts.setCellWidget(row, 5, container)
+
+    @staticmethod
+    def borrar_venta_click():
+        try:
+            # 1. Obtener el botón pulsado
+            boton = QtWidgets.QApplication.focusWidget()
+            if not boton: return
+
+            # 2. Obtener la posición y la fila
+            button_pos = boton.mapToParent(QtCore.QPoint(0, 0))
+            index = globals.ui.tableInvoiceProducts.indexAt(button_pos)
+
+            if index.isValid():
+
+                # 3. Eliminar de globals.sales
+                # Solo eliminamos si la fila corresponde a una venta guardada
+                # (evitamos borrar la fila vacía de "nueva entrada" si no tiene datos)
+                row = index.row()
+                mbox = QtWidgets.QMessageBox()
+                mbox.setWindowTitle("Warning")
+                mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                mbox.setText("Delete product from invoice?")
+                mbox.setStandardButtons(
+                    QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+                mbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
+                mbox.setStyleSheet(globals.mboxStyleSheet)
+                resultExec = mbox.exec()
+                if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
+                    if row < len(globals.sales):
+                        del globals.sales[row]
+
+                        # 4. Eliminar la fila visualmente
+                        globals.ui.tableInvoiceProducts.removeRow(row)
+
+                        # 5. Recalcular totales
+                        Invoices.calculate_totals()
+                    else:
+                        # Si el usuario intenta borrar la fila vacía que se genera automáticamente
+                        # podemos simplemente limpiarla o no hacer nada.
+                        # Si decidimos borrarla visualmente:
+                        globals.ui.tableInvoiceProducts.removeRow(row)
+
+        except Exception as e:
+            print("Error al borrar venta:", e)
+    @staticmethod
     def cellChangedSales(item):
-        print("cell changed sales:")
+        # print("cell changed sales:")
         try:
             iva = 0.21
             row = item.row()
@@ -346,10 +487,10 @@ class Invoice:
                      globals.ui.tableInvoiceProducts.item(row, 2).text().strip(),
                      globals.ui.tableInvoiceProducts.item(row, 3).text().strip(),
                      globals.ui.tableInvoiceProducts.item(row, 4).text().strip()])
-
+                Invoices.crear_boton_borrar(row)
                 rowCount = globals.ui.tableInvoiceProducts.rowCount()
                 if rowCount == len(globals.sales):
-                    Invoice.activeSales(row=rowCount)
+                    Invoices.activeSales(row=rowCount)
                 globals.subtotal = 0
                 for sale in globals.sales:
                     globals.subtotal += float(sale[5].replace('€', ''))
@@ -369,8 +510,9 @@ class Invoice:
             factura = InvoiceService.get_by_id(int(globals.ui.lblNumFac.text()))
         except:
             factura = None
-
         if factura is not None:
+            # Guardar todas las ventas en BBDD
+            persist_sales(factura)
             # imprimir factura si existe
             Reports.reportInvoices( idfac = factura.id )
         else:
@@ -392,25 +534,8 @@ class Invoice:
                     print("Error al salvar la factura: ", error)
 
 
-                # Guardar sus productos recorriendo la tabla
-                productos = Invoice.getInvoiceProducts()
-                # todo: implementar esto
-                for producto in productos:
-                    if producto != productos[productos.count()-1]:
-                        try:
-                            InvoiceService.add_product(
-                                id_factura = factura.id,
-                                producto = InvoiceDetail(
-                                    invoice_id = factura.id,
-                                    product_id = int(producto.Code),
-                                    product_name = producto.Name,
-                                    product_price = str(producto.Price),
-                                    quantity = producto.Amount,
-                                    subtotal = float(str(producto.Total).split("€")[0]),
-                                ),
-                            )
-                        except Exception as error:
-                            print("Error al salvar la venta: ", error)
+                # Guarda productos en BBDD
+                persist_sales(factura)
 
                 globals.ui.tableInvoiceProducts.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
                 globals.ui.tableInvoiceProducts.setStyleSheet("""
@@ -423,26 +548,20 @@ class Invoice:
                 #imprimir factura
                 Reports.reportInvoices( idfac = factura.id )
 
-    @staticmethod
-    def getInvoiceProducts():
-
-        lista_ventas = []
-
-        tabla = globals.ui.tableInvoiceProducts
-
-        datos_tabla = []
-
-        for f in range(tabla.rowCount()):
-            datos_fila = {}
-            for c in range(tabla.columnCount()):
-                # Usamos el encabezado de la columna como clave del diccionario
-                header = tabla.horizontalHeaderItem(c).text()
-                item = tabla.item(f, c)
-                datos_fila[header] = item.text() if item else ""
-
-            datos_tabla.append(datos_fila)
-
-        return datos_tabla
-        # print("DBG Extract products-----------------------------------")
-        # print(datos_tabla) [{'Code': '15', 'Name': 'Jamon Serrano', 'Price': '55.4€', 'Amount': '1', 'Total': '55.4€'}, {'Code': '13', 'Name': 'Lasaña', 'Price': '2.21€', 'Amount': '1', 'Total': '2.21€'}, {'Code': '', 'Name': '', 'Price': '', 'Amount': '', 'Total': ''}]
-        # print("DBG----------------------------------------------------")
+def persist_sales(factura: Invoice):
+    for sale in globals.sales:
+        print(sale)
+        try:
+            InvoiceService.add_product(
+                id_factura=factura.id,
+                producto=InvoiceDetail(
+                    invoice_id=factura.id,
+                    product_id=int(sale[1]),
+                    product_name=sale[2],
+                    product_price=str(sale[3].split('€')[0]),
+                    quantity=int(sale[4]),
+                    subtotal=float(str(sale[5]).split("€")[0]),
+                ),
+            )
+        except Exception as error:
+            print("Error al salvar la venta: ", error)

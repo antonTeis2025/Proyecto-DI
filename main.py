@@ -2,7 +2,7 @@
 import styles
 from Products import Products
 from conexion import *
-from invoice import Invoice
+from invoice import Invoices
 from models.Product import ProductFamily
 from venAux import *
 import events
@@ -29,7 +29,7 @@ class Main(QtWidgets.QMainWindow):
 
         # Eventos teclado
         self.scClean = QtGui.QShortcut(QtGui.QKeySequence("f11"), self)
-        self.scClean.activated.connect(Invoice.saveSales)
+        self.scClean.activated.connect(Invoices.saveSales)
         # Cargar Etilos
         self.setStyleSheet(styles.load_stylesheet())
 
@@ -37,7 +37,7 @@ class Main(QtWidgets.QMainWindow):
         varcli = True # Solo muestra clientes True
         Conexion.db_conexion() # Esto seguramente se puede sacar
         Customers.loadTablecli(varcli) # Refactorizao
-        Invoice.loadTableFac() # todo: crear boton eliminar fila
+        Invoices.loadTableFac()
         Events.resizeTabInvProducts()
         Events.resizeTabCustomer(self)
         Events.resizeTabInv()
@@ -62,9 +62,9 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.txtEmailcli.editingFinished.connect(lambda: Customers.checkEmail(globals.ui.txtEmailcli.text()))
         globals.ui.txtMobilecli.editingFinished.connect(lambda: Customers.checkMobile(globals.ui.txtMobilecli.text()))
         # globals.ui.txtUnitPrice.editingFinished.connect(Products.checkPrice)
-        globals.ui.txtDniCustomerFac.editingFinished.connect(Invoice.checkDni)
+        globals.ui.txtDniCustomerFac.editingFinished.connect(Invoices.checkDni)
         globals.ui.txtDniCustomerFac.setText("00000000T")
-        Invoice.checkDni()
+        Invoices.checkDni()
 
         # Function of chkHistoriccli
         # Carga los clientes a la tabla cada vez  que se cambia el chbx de historico
@@ -84,14 +84,14 @@ class Main(QtWidgets.QMainWindow):
         globals.ui.btnCleancli.clicked.connect(Customers.cleanCli) # r
         globals.ui.btnModycli.clicked.connect(Customers.modifCli) # r
         globals.ui.btnBuscacli.clicked.connect(Customers.buscaCli) # r
-        globals.ui.btnCleanFac.clicked.connect(Invoice.cleanInv) # r
-        globals.ui.btnSaveFac.clicked.connect(Invoice.saveInvoice) # r
-        globals.ui.btnSaveSales.clicked.connect(Invoice.saveSales) # todo
+        globals.ui.btnCleanFac.clicked.connect(Invoices.cleanInv) # r
+        globals.ui.btnSaveFac.clicked.connect(Invoices.saveInvoice) # r
+        globals.ui.btnSaveSales.clicked.connect(Invoices.saveSales)
 
         # Functions of tables
         globals.ui.tableCustomerList.clicked.connect(Customers.selectCustomer) # r
-        globals.ui.tableInvoiceList.clicked.connect(Invoice.selectInvoice) # r
-        globals.ui.tableInvoiceProducts.itemChanged.connect(Invoice.cellChangedSales) # todo
+        globals.ui.tableInvoiceList.clicked.connect(Invoices.selectInvoice) # r
+        globals.ui.tableInvoiceProducts.itemChanged.connect(Invoices.cellChangedSales)
 
         #Functions
         events.Events.loadStatusBar(self)

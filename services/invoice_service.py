@@ -134,14 +134,55 @@ class InvoiceService:
             session.commit()
 
     @staticmethod
-    def add_product(id_factura: int, producto: InvoiceDetail ) -> Invoice:
-
-        factura = InvoiceService.get_by_id(id_factura)
-        if not factura:
-            raise ValueError("Factura no encontrada")
-
+    def add_product(id_factura: int, producto: InvoiceDetail) -> Invoice:
+        # 1. Abrimos la sesión PRIMERO
         with get_session() as session:
+            # 2. Buscamos la factura DENTRO de esta sesión activa
+            # Usamos session.get para asegurar que el objeto esté atado a esta transacción
+            factura = session.get(Invoice, id_factura)
+
+            if not factura:
+                raise ValueError("Factura no encontrada")
+
+            # 3. Ahora sí podemos modificar la relación
             factura.details.append(producto)
+
+            # 4. Guardamos
             session.commit()
             session.refresh(factura)
+
             return factura
+
+
+    @staticmethod
+    def delete_invoice(invoice_id: int):
+        """
+        Elimina físicamente una factura y todos sus detalles asociados.
+        """
+        with get_session() as session:
+            # 1. Buscamos la factura
+            # No necesitamos cargar relaciones (selectinload) porque las borraremos por ID
+            stmt = select(Invoice).where(Invoice.id == invoice_id)
+            invoice = session.scalar(stmt)
+
+            if not invoice:
+                raise ValueError(f"No se pudo eliminar: La factura con ID {invoice_id} no existe.")
+
+            try:
+                # 2. Borrar los detalles asociados primero (por integridad referencial)
+                # SQLAlchemy permite borrar mediante la relación si está cargada,
+                # pero una ejecución de delete directa es más eficiente:
+                from sqlalchemy import delete
+                stmt_details = delete(InvoiceDetail).where(InvoiceDetail.invoice_id == invoice_id)
+                session.execute(stmt_details)
+
+                # 3. Borrar la cabecera de la factura
+                session.delete(invoice)
+
+                # 4. Confirmar cambios
+                session.commit()
+                print(f"Factura {invoice_id} y sus detalles eliminados correctamente.")
+
+            except Exception as e:
+                session.rollback()
+                raise Exception(f"Error al eliminar la factura: {str(e)}")
