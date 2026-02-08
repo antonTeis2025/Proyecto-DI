@@ -116,31 +116,34 @@ class Invoices:
 
     @staticmethod
     def saveInvoice():
+        # Variable para recordar la factura creada
+        new_invoice_id = None
+
         # Conseguir el DNI de la caja de texto
         dni = globals.ui.txtDniCustomerFac.text().strip().upper()
         if dni == "":
             dni = "00000000T"
-        # Conseguir el cliente de la BBDD
 
+        # Conseguir el cliente de la BBDD
         cliente = CustomerService.get_by_dni(dni)
-        # print("DBG---------------------------")
-        # print(cliente)
-        # print("DBG---------------------------")
+
         if cliente:
             # Poner DNI en la caja de texto
             globals.ui.txtDniCustomerFac.setText(dni)
             # Poner la fecha actual en la caja de texto
             data = datetime.datetime.now().strftime("%d/%m/%Y-%H:%M")
             globals.ui.lblFechaFac.setText(data)
+
             # Crear factura
             factura = None
             try:
-                factura = InvoiceService.create(customer_dni = dni, items = None)
+                factura = InvoiceService.create(customer_dni=dni, items=None)
             except Exception as e:
                 print(f"ERROR AL CREAR FACTURA: {e}")
 
-            if factura != None: # Si el proceso no falla
-                Invoices.loadTableFac(True)
+            if factura != None:  # Si el proceso no falla
+                new_invoice_id = factura.id  # <--- 1. GUARDAMOS EL ID
+
                 # Mensaje de exito
                 mbox = QtWidgets.QMessageBox()
                 mbox.setWindowTitle("Invoice")
@@ -162,12 +165,30 @@ class Invoices:
             mbox = QtWidgets.QMessageBox()
             mbox.setWindowTitle("Invoice")
             mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
-            mbox.setText("Misseing Information")
+            mbox.setText("Missing Information")
             mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ok)
             mbox.setStyleSheet(globals.mboxStyleSheet)
             mbox.exec()
 
+        # Recargamos la tabla (esto borra la selección visual)
         Invoices.loadTableFac(False)
+
+        # <--- 2. LÓGICA PARA AUTO-SELECCIONAR LA NUEVA FACTURA
+        if new_invoice_id:
+            # Buscamos en la tabla la fila que tiene el ID de la nueva factura
+            table = globals.ui.tableInvoiceList
+            for row in range(table.rowCount()):
+                item_id = table.item(row, 0)  # Columna 0 es el ID
+                if item_id and item_id.text() == str(new_invoice_id):
+                    # A. Seleccionamos visualmente la fila
+                    table.selectRow(row)
+
+                    # B. Llamamos al funcion que carga los datos y habilita la edición
+                    Invoices.selectInvoice()
+
+                    # C. Hacemos scroll hasta la fila (por si la tabla es muy larga)
+                    table.scrollToItem(item_id)
+                    break
 
     @staticmethod
     def loadTableFac(showData=False):
@@ -511,15 +532,26 @@ class Invoices:
         except:
             factura = None
         if factura is not None:
-            # Guardar todas las ventas en BBDD
-            persist_sales(factura)
-            # imprimir factura si existe
-            Reports.reportInvoices( idfac = factura.id )
+
+            mbox = QtWidgets.QMessageBox()
+            mbox.setWindowTitle("Warning")
+            mbox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+            mbox.setText("Do you want to emit this invoice?")
+            mbox.setStandardButtons(
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            mbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
+            mbox.setStyleSheet(globals.mboxStyleSheet)
+            resultExec = mbox.exec()
+            if resultExec == QtWidgets.QMessageBox.StandardButton.Yes:
+                # Guardar todas las ventas en BBDD
+                persist_sales(factura)
+                # imprimir factura si existe
+                Reports.reportInvoices( idfac = factura.id )
         else:
             mbox = QtWidgets.QMessageBox()
             mbox.setWindowTitle("Invoice")
             mbox.setIcon(QtWidgets.QMessageBox.Icon.Question)
-            mbox.setText("Do you want to save this invoice?")
+            mbox.setText("Invoice does not exist. Do you want to save this invoice?")
             mbox.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
             mbox.setStyleSheet(globals.mboxStyleSheet)
             resultExec = mbox.exec()
