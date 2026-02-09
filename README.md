@@ -24,3 +24,8 @@ Generar documentacion
 cd docs
 .\make.bat html
 ```
+
+Compilar a .exe
+```powershell
+pyinstaller --onefile --windowed --icon=img/logo.png main.py
+```
