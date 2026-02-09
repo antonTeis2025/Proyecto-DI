@@ -1,49 +1,60 @@
-
 QWidget{
     font-family: Arial, sans-serif;
+    color: black; /* Fuente negra solicitada */
 }
+
 QMainWindow{
-    background-color: #f4f7fa;
+    background-color: #f4fcf1; /* granny-smith-apple-50 (Fondo general) */
 }
-/* Manu Bar */
-    QMenuBar{
-        background-color: #b5c6db; /*Cambiar a color t3*/
-        spacing: 3px;
-        color: #2b2f40;
-    }
-    QMenuBar::item{
-        border-radius: 2px;
-        padding: 6px;
-        margin-top: 2px;
-        margin-bottom: 1px;
-    }
-    QMenuBar::item:selected{
-        background-color: #e6ecf3;
-    }
+
+/* Menu Bar */
+QMenuBar{
+    background-color: #cbf3bf; /* granny-smith-apple-200 (Cabecera) */
+    spacing: 3px;
+    color: black;
+}
+
+QMenuBar::item{
+    border-radius: 2px;
+    padding: 6px;
+    margin-top: 2px;
+    margin-bottom: 1px;
+}
+
+QMenuBar::item:selected{
+    background-color: #abea99; /* granny-smith-apple-300 (Hover selección) */
+    color: black;
+}
+
+/* Tabs */
 QTabWidget::pane {
-    background-color: #e6ecf3;
-    border: 1px solid #ccc;
+    background-color: #e4fade; /* granny-smith-apple-100 */
+    border: 1px solid #70d454; /* granny-smith-apple-400 (Borde sutil) */
 }
+
 QTabBar::tab {
-    background: #b5c6db;
+    background: #cbf3bf; /* granny-smith-apple-200 */
     padding: 5px 10px;
     border: 0px;
     border-radius: 2px;
     margin-right: 4px;
     margin-bottom: 4px;
+    color: black;
 }
+
 QTabBar::tab:hover {
-    background: #e6ecf3;
+    background: #abea99; /* granny-smith-apple-300 */
 }
 
 QTabBar::tab:selected {
-    background: #e6ecf3;
+    background: #e4fade; /* granny-smith-apple-100 (Se funde con el pane) */
     border-radius: 2px;
+    font-weight: bold;
 }
-/*Toolbar*/
 
+/* Toolbar */
 QToolBar {
-    background-color: #e6ecf3; /* mismo tono que la barra de menú */
+    background-color: #e4fade; /* granny-smith-apple-100 */
     border: none;
     padding: 4px;
     spacing: 6px;
@@ -51,207 +62,230 @@ QToolBar {
 
 /* Botones dentro del toolbar */
 QToolButton {
-    background-color: #e6ecf3;
-    color: #2b2f40;
+    background-color: #e4fade; /* granny-smith-apple-100 */
+    color: black;
     border: none;
     border-radius: 2px;
     margin: 2px;
 }
 
 QToolButton:hover {
-    background-color: #f4f7fa;
+    background-color: #f4fcf1; /* granny-smith-apple-50 */
 }
 
-/* Cambio de la caja del botonn */
-    QPushButton{
-        background-color: #92a8c8;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
-    QPushButton#btnDelcli {
-        background-color: #d8a3a3;
-    }
-    QPushButton#btnDeleteProduct {
-        background-color: #d8a3a3;
-    }
-/* Cambio de la caja del botonn al estar encima*/
-    QPushButton:hover{
-        background-color: #f4f7fa;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
-    QPushButton#btnDelcli:hover{
-        background-color: #f4f7fa;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
-    QPushButton#btnDeleteProduct:hover{
-        background-color: #f4f7fa;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
+/* Botones Generales (PushButton) */
+QPushButton{
+    background-color: #cbf3bf; /* granny-smith-apple-200 */
+    color: black;
+    border: 0px;
+    border-radius: 2px;
+}
 
-/*Botones con iconos*/
+/* Botones de Borrado (Excepción Roja para seguridad) */
+QPushButton#btnDelcli {
+    background-color: #d8a3a3; /* Mantenemos rojo suave para indicar peligro */
+    color: black;
+}
+QPushButton#btnDeleteProduct {
+    background-color: #d8a3a3;
+    color: black;
+}
+
+/* Hover en Botones */
+QPushButton:hover{
+    background-color: #abea99; /* granny-smith-apple-300 */
+    color: black;
+    border: 0px;
+    border-radius: 2px;
+}
+
+QPushButton#btnDelcli:hover{
+    background-color: #f4fcf1; /* Fondo claro al pasar mouse */
+    color: black;
+}
+QPushButton#btnDeleteProduct:hover{
+    background-color: #f4fcf1;
+    color: black;
+}
+
+/* Botones Específicos */
 QPushButton#btnBuscacli{
-    background-color: #e6ecf3;
+    background-color: #e4fade; /* granny-smith-apple-100 */
 }
 QPushButton#btnBuscacli:hover{
-	background-color: #f4f7fa;
+    background-color: #f4fcf1;
 }
+
 QPushButton#btnFechaaltacli{
-    background-color: #e6ecf3;
+    background-color: #e4fade;
 }
 QPushButton#btnFechaaltacli:hover{
-	background-color: #f4f7fa;
+    background-color: #f4fcf1;
 }
+
 QPushButton#btnCleancli{
-    background-color: #e6ecf3;
+    background-color: #e4fade;
 }
 QPushButton#btnCleancli:hover{
-	background-color: #f4f7fa;
+    background-color: #f4fcf1;
 }
 
-/* Cambio de la caja del combobox */
-    QComboBox{
-        background-color: #f4f7fa;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
-/*Cambio flecha combobox*/
-    QComboBox::down-arrow {
-        image: url(img/drop-down-arrow.png);
-        width: 15px;
-        height: 25px;
-        border: 0px;
-        border-radius: 5px;
-        margin-right: 7px;
-    }
-    /*Combio caja de la flecha del combobox*/
-    QComboBox::drop-down {
-        border: none;
-    }
-    QComboBox::down-arrow:hover {
-        background-color: #ffffff; /* Color al pasar el mouse */
-    }
-    QLineEdit{
-        background-color: #f4f7fa
-    }
+/* ComboBox */
+QComboBox{
+    background-color: #f4fcf1; /* granny-smith-apple-50 */
+    color: black;
+    border: 0px;
+    border-radius: 2px;
+}
 
-/*Cambiar el color del checkBox */
-    QCheckBox {
-        color: #2b2f40;
-    }
+/* Flecha combobox */
+QComboBox::down-arrow {
+    image: url(img/drop-down-arrow.png);
+    width: 15px;
+    height: 25px;
+    border: 0px;
+    border-radius: 5px;
+    margin-right: 7px;
+}
 
-    QCheckBox::indicator{
-        border: 1px solid #92a8c8;
-        border-radius: 2px;
-        width: 13px;
-        height: 13px;
-        background-color: #f4f7fa;
-    }
+QComboBox::drop-down {
+    border: none;
+}
+QComboBox::down-arrow:hover {
+    background-color: #abea99; /* granny-smith-apple-300 */
+}
 
-    QCheckBox::indicator:unchecked {
+/* LineEdit */
+QLineEdit{
+    background-color: #f4fcf1; /* granny-smith-apple-50 */
+    color: black;
+    border: 1px solid #cbf3bf; /* Borde suave 200 */
+}
 
-    }
-    QCheckBox::indicator:checked {
-        image: url(img/tick.png);
+/* CheckBox */
+QCheckBox {
+    color: black;
+}
 
-    }
-/*Cambiar radiobuttons*/
-    QRadioButton::indicator {
-        width: 13px;
-        height: 13px;
-        border-radius: 8px;
-        border: 2px solid #92a8c8;   /* Borde del círculo */
-        background-color: #f4f7fa;   /* Fondo del círculo sin marcar */
-    }
+QCheckBox::indicator{
+    border: 1px solid #3a9920; /* granny-smith-apple-600 (Borde oscuro para contraste) */
+    border-radius: 2px;
+    width: 13px;
+    height: 13px;
+    background-color: #f4fcf1;
+}
 
-    QRadioButton::indicator:checked {
-        image: url(img/tick.png);
-    }
-/*TABLA*/
-    /*CAMBIAR TITULO TABLA*/
-        QLabel#lblListcli {
-            font-family: "Arial";
-            font-size: 24px;
-            font-weight: bold;
-            color: #2b2f40;
-            letter-spacing: 1px;
-        }
-    /*Cabecera*/
-        QHeaderView::section {
-            background-color: #b5c6db;
-            color: #2b2f40;
-            font-weight: bold;
-            font-size: 14px;
-            padding: 2px;
-        }
-    /* Fondo general de la tabla */
-        QTableWidget, QTableView {
-            background-color: #f4f7fa;
-            color: #2b2f40;
+QCheckBox::indicator:unchecked {
 
-        }
+}
+QCheckBox::indicator:checked {
+    image: url(img/tick.png);
+    background-color: #abea99; /* Relleno al marcar */
+}
 
-    /* Filas */
-        QTableWidget::item:alternate {
-            background-color: #e6ecf3;
-        }
-        QTableView::item:selected {
-        background-color: #4d5780;
-        color: #ffffff;
-        }
-        QTableView::item:hover {
-            background-color: #4d5780;
-            color: #ffffff;
-        }
+/* Radio Buttons */
+QRadioButton {
+    color: black;
+}
 
-/*MensageBox*/
-    /* Mensage box buttons */
-    QMessageBox::QPushButton {
-        background-color: #92a8c8;
-        color: #2b2f40;
-        border: 0px;
-        border-radius: 2px;
-    }
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+    border-radius: 8px;
+    border: 2px solid #3a9920;   /* granny-smith-apple-600 */
+    background-color: #f4fcf1;
+}
 
-    QMessageBox::QPushButton #noButton {
-        background-color: #d8a3a3;
-    }
+QRadioButton::indicator:checked {
+    background-color: #70d454; /* granny-smith-apple-400 */
+    image: url(img/tick.png);
+}
 
-    /* Labels dentro del diálogo */
-    QMessageBox::QLabel  {
-        color: #2b2f40;
-        font-size: 16px;
-    }
+/* TABLA */
+/* Titulo Tabla */
+QLabel#lblListcli {
+    font-family: "Arial";
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    letter-spacing: 1px;
+}
 
+/* Cabecera Tabla */
+QHeaderView::section {
+    background-color: #cbf3bf; /* granny-smith-apple-200 */
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 2px;
+    border: none;
+}
+
+/* Fondo general de la tabla */
+QTableWidget, QTableView {
+    background-color: #f4fcf1; /* granny-smith-apple-50 */
+    color: black;
+    gridline-color: #cbf3bf;
+}
+
+/* Filas Alternas */
+QTableWidget::item:alternate {
+    background-color: #e4fade; /* granny-smith-apple-100 */
+}
+
+/* Selección en Tabla */
+QTableView::item:selected {
+    background-color: #abea99; /* granny-smith-apple-300 */
+    color: black;
+}
+
+QTableView::item:hover {
+    background-color: #abea99; /* granny-smith-apple-300 */
+    color: black;
+}
+
+/* MessageBox */
+QMessageBox {
+    background-color: #f4fcf1;
+}
+
+QMessageBox::QPushButton {
+    background-color: #cbf3bf;
+    color: black;
+    border: 0px;
+    border-radius: 2px;
+}
+
+QMessageBox::QPushButton#noButton {
+    background-color: #d8a3a3;
+}
+
+QMessageBox::QLabel {
+    color: black;
+    font-size: 16px;
+}
 
 /* STATUS BAR */
 QStatusBar {
-    background-color: #b5c6db; /* mismo color que la barra de menús */
-    color: #2b2f40;
+    background-color: #cbf3bf; /* granny-smith-apple-200 */
+    color: black;
     font-size: 13px;
     font-weight: bold;
 }
 
-/* QLabel dentro de la statusbar */
 QStatusBar QLabel {
-    color: #2b2f40;
+    color: black;
     background-color: transparent;
     padding: 4px 10px;
 }
 
-/* Separación visual entre los labels*/
 QStatusBar::item {
     border: none;
     margin: 0px 8px;
 }
+
 QStatusBar QLabel#labelversion {
-    color: #4d5780;
+    color: black;
     font-style: italic;
+    opacity: 0.8;
 }

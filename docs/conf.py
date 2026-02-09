@@ -10,8 +10,8 @@ import sys
 sys.path.insert(0, os.path.abspath('C:\\Users\\a24miguelrq\\PycharmProjects\\rodriguezquintas'))
 
 project = 'Aplicacion de Gestion (Diseño de Interfaces)'
-copyright = '2025, Miguel Rodríguez Quintás'
-author = 'Miguel Rodríguez Quintás'
+copyright = '2025, Antón Davila Carro'
+author = 'Antón Davila Carro'
 release = 'V0.0.1'
 
 # -- General configuration ---------------------------------------------------

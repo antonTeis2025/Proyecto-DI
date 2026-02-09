@@ -18,3 +18,9 @@ Compilar la interfaz
 ```powershell
 pyuic6 -o nombre_archivo.py nombre_archivo.ui
 ```
+
+Generar documentacion
+```powershell
+cd docs
+.\make.bat html
+```
