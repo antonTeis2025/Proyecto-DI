@@ -44,10 +44,10 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\a24miguelrq\PycharmProjects\rodriguezquintas\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\a24miguelrq\PycharmProjects\rodriguezquintas\img\*"; DestDir: "{app}/img"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\a24miguelrq\PycharmProjects\rodriguezquintas\data\*"; DestDir: "{app}/data"; Flags: recursesubdirs createallsubdirs
-Source: "C:\Users\a24miguelrq\PycharmProjects\rodriguezquintas\styles.qss"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\conguchu\PycharmProjects\Proyecto-DI\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\conguchu\PycharmProjects\Proyecto-DI\img\*"; DestDir: "{app}/img"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\conguchu\PycharmProjects\Proyecto-DI\data\*"; DestDir: "{app}/data"; Flags: recursesubdirs createallsubdirs
+Source: "C:\Users\conguchu\PycharmProjects\Proyecto-DI\styles.qss"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
