@@ -29,3 +29,6 @@ Compilar a .exe
 ```powershell
 pyinstaller --onefile --windowed --icon=img/logo.png main.py
 ```
+
+Métodos para test
+![img.png](img.png)
