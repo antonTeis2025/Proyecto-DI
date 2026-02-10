@@ -233,6 +233,11 @@ class Invoices:
 
     @staticmethod
     def selectInvoice():
+        """
+
+        esta funcion carga los datos de una factura a los campos de texto
+
+        """
         try:
             # Pone to.do a 0 y carga los datos que están en la propia fila
             globals.subtotal = 0

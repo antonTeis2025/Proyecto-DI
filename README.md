@@ -17,10 +17,21 @@ pyuic6 -o nombre_archivo.py nombre_archivo.ui
 
 ## Documentación
 
-Generar documentacion
+
+En pycharm ir a: ``File > Settings > Python > Internal Tools > DocStrings``
+
+Selecciona ``reStructuredText``
+
+Genera la configuración de la documentacion:
 ```powershell
-cd docs
-.\make.bat html
+ cd .\docs\
+ sphinx-apidoc.exe -o src ..
+```
+
+Ahora, desde la misma carpeta ``docs``, genera la documentación
+
+```powershell
+sphinx-build.exe -b html -d .\_build\doctrees\ . .\_build\html
 ```
 
 ## Distribución del programa
@@ -34,6 +45,12 @@ pyinstaller --onefile --windowed --icon=img/logo.png main.py
 ## Tests unitarios
 
 Ejecutar tests unitarios (carpeta tests)
+
+En pycharm: ``File > Settings > Python > Internal Tools > Testing``
+
+Elegir unittest como motor de tests
+
+
 ```powershell
 python -m unittest test.tests
 ```
