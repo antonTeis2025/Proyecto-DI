@@ -1,8 +1,4 @@
-# Falta
-
-- Pestaña de facturas corregir errores
-
-# Usar
+# Para desarrolladores
 
 Crear el venv y instalar las dependencias
 ```powershell
@@ -19,16 +15,23 @@ Compilar la interfaz
 pyuic6 -o nombre_archivo.py nombre_archivo.ui
 ```
 
+## Documentación
+
 Generar documentacion
 ```powershell
 cd docs
 .\make.bat html
 ```
 
+## Distribución del programa
+
 Compilar a .exe
 ```powershell
 pyinstaller --onefile --windowed --icon=img/logo.png main.py
 ```
+
+
+## Tests unitarios
 
 Ejecutar tests unitarios (carpeta tests)
 ```powershell
