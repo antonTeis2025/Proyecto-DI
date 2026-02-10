@@ -30,5 +30,10 @@ Compilar a .exe
 pyinstaller --onefile --windowed --icon=img/logo.png main.py
 ```
 
+Ejecutar tests unitarios (carpeta tests)
+```powershell
+python -m unittest test.tests
+```
+
 Métodos para test
 ![img.png](img.png)
