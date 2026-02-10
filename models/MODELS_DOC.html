@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación SQLAlchemy ORM</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #fafafa;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+        }
+        code, pre {
+            background-color: #f4f4f4;
+            border-radius: 4px;
+        }
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+        }
+        code {
+            padding: 2px 5px;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .note {
+            background: #e8f4fd;
+            border-left: 5px solid #3498db;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #f39c12;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #eafaf1;
+            border-left: 5px solid #2ecc71;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📘 Documentación de Modelos y Relaciones con SQLAlchemy ORM</h1>
+
+<p>
+Esta documentación explica cómo crear modelos con SQLAlchemy ORM, mapearlos a una base de datos existente
+y definir relaciones entre ellos. Está basada en un sistema real de <strong>clientes, facturas, productos y ubicaciones</strong>.
+</p>
+
+<hr>
+
+<h2>🧱 1. ¿Qué es un Modelo?</h2>
+<p>
+Un <strong>modelo</strong> representa una tabla de la base de datos como una clase Python.
+Cada atributo corresponde a una columna.
+</p>
+
+<pre><code>
+from database import Base
+
+class Customer(Base):
+    __tablename__ = "customers"
+</code></pre>
+
+<div class="note">
+Todos los modelos deben heredar de <code>Base</code>.
+</div>
+
+---
+
+<h2>🏷️ 2. Definición de Columnas</h2>
+
+<h3>2.1 Columnas simples</h3>
+<pre><code>
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
+
+name: Mapped[str] = mapped_column(String(100), nullable=False)
+</code></pre>
+
+<h3>2.2 Columnas con nombre distinto en la BBDD</h3>
+<pre><code>
+email: Mapped[str] = mapped_column("mail", String(150))
+</code></pre>
+
+<div class="note">
+Regla clave: <code>mapped_column("nombre_en_bd", TipoSQL)</code>
+</div>
+
+<h3>2.3 Claves Primarias</h3>
+<pre><code>
+dni: Mapped[str] = mapped_column("dni_nie", String(20), primary_key=True)
+</code></pre>
+
+<ul>
+    <li>La PK no tiene que llamarse <code>id</code></li>
+    <li>Puede ser <code>String</code>, <code>Integer</code>, etc.</li>
+</ul>
+
+---
+
+<h2>🔗 3. Claves Foráneas (Foreign Keys)</h2>
+
+<p>
+Las claves foráneas siempre apuntan a:
+</p>
+
+<pre><code>nombre_tabla.nombre_columna</code></pre>
+
+<h3>Ejemplo: Factura → Cliente</h3>
+
+<pre><code>
+customer_dni: Mapped[str] = mapped_column(
+    "dni_nie",
+    ForeignKey("customers.dni_nie"),
+    nullable=False
+)
+</code></pre>
+
+<div class="warning">
+❌ Incorrecto: <code>ForeignKey(Customer.dni)</code><br>
+✅ Correcto: <code>ForeignKey("customers.dni_nie")</code>
+</div>
+
+---
+
+<h2>🔁 4. Relaciones entre Modelos</h2>
+
+<h3>4.1 One-to-Many (1 → ∞)</h3>
+
+<p>Un cliente tiene muchas facturas.</p>
+
+<pre><code>
+customer: Mapped["Customer"] = relationship("Customer")
+</code></pre>
+
+<h3>4.2 One-to-Many con back_populates</h3>
+
+<pre><code>
+class Invoice(Base):
+    details = relationship("InvoiceDetail", back_populates="invoice")
+</code></pre>
+
+<pre><code>
+class InvoiceDetail(Base):
+    invoice = relationship("Invoice", back_populates="details")
+</code></pre>
+
+<div class="note">
+<code>back_populates</code> sincroniza ambas direcciones de la relación.
+</div>
+
+<h3>4.3 Many-to-One (∞ → 1)</h3>
+
+<pre><code>
+product: Mapped["Product"] = relationship("Product")
+</code></pre>
+
+---
+
+<h2>🧩 5. Tablas Intermedias (Association Object)</h2>
+
+<p>
+Se usan cuando una tabla une dos entidades y además tiene datos propios.
+</p>
+
+<pre><code>
+class InvoiceDetail(Base):
+    __tablename__ = "sales"
+
+    invoice_id = mapped_column(
+        "idFac",
+        ForeignKey("invoices.idFac")
+    )
+
+    product_id = mapped_column(
+        "idProduct",
+        ForeignKey("products.code")
+    )
+</code></pre>
+
+<div class="success">
+Este patrón se llama <strong>Association Object Pattern</strong>.
+</div>
+
+---
+
+<h2>🗺️ 6. Relaciones Geográficas</h2>
+
+<pre><code>
+class Province(Base):
+    municipalities = relationship("Municipio", back_populates="province")
+</code></pre>
+
+<pre><code>
+class Municipio(Base):
+    province = relationship("Province", back_populates="municipalities")
+</code></pre>
+
+---
+
+<h2>🧪 7. Validaciones con @validates</h2>
+
+<h3>Validar DNI</h3>
+<pre><code>
+@validates("dni")
+def validate_dni(self, key, value):
+    if not value:
+        raise ValueError("DNI vacío")
+    return value.upper()
+</code></pre>
+
+<h3>Validar precio</h3>
+<pre><code>
+@validates("unit_price")
+def validate_price(self, key, price):
+    if float(price.split("€")[0]) < 0:
+        raise ValueError("Precio negativo")
+    return price
+</code></pre>
+
+---
+
+<h2>📦 8. Enums</h2>
+
+<pre><code>
+class ProductFamily(enum.Enum):
+    FOODS = "Foods"
+    ELECTRONICS = "Electronics"
+</code></pre>
+
+<div class="warning">
+Si la base de datos ya existe y guarda texto libre, usa <code>String</code> en vez de Enum SQL.
+</div>
+
+---
+
+<h2>🧮 9. Métodos de Negocio</h2>
+
+<pre><code>
+def calculate_totals(self):
+    self.subtotal = sum(d.subtotal for d in self.details)
+    self.iva = self.subtotal * 0.21
+    self.total = self.subtotal + self.iva
+</code></pre>
+
+---
+
+<h2>🪪 10. __repr__</h2>
+
+<pre><code>
+def __repr__(self):
+    return f"&lt;Customer(dni='{self.dni}', name='{self.name}')&gt;"
+</code></pre>
+
+---
+
+<h2>✅ 11. Buenas Prácticas</h2>
+
+<ul>
+    <li>Usar siempre <code>Mapped[]</code> y <code>mapped_column</code></li>
+    <li>Las FK apuntan a <code>tabla.columna</code></li>
+    <li><code>relationship()</code> usa nombres de clases</li>
+    <li>Validar lógica de negocio con <code>@validates</code></li>
+    <li>No forzar Enums SQL si la BD ya existe</li>
+</ul>
+
+<hr>
+
+<p>
+📌 <strong>Conclusión</strong>:
+Tu arquitectura sigue el estilo moderno de SQLAlchemy 2.0, respeta bases de datos legacy
+y mantiene la lógica de negocio bien organizada.
+</p>
+
+</body>
+</html>
