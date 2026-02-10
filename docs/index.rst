@@ -8,9 +8,6 @@ Documentación
 
 Índice
 --------------
-    Prueba de indices.
-
-
     .. toctree::
        :maxdepth: 10
        :caption: Contents:

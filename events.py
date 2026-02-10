@@ -18,6 +18,9 @@ from services.location_service import LocationService
 class Events:
     @staticmethod
     def messageExit():
+        """
+        muestra un mensaje de confirmacion de salida
+        """
         try:
             mbox = QtWidgets.QMessageBox()
             mbox.setIcon(QtWidgets.QMessageBox.Icon.Question)

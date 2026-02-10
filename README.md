@@ -25,7 +25,7 @@ Selecciona ``reStructuredText``
 Genera la configuración de la documentacion:
 ```powershell
  cd .\docs\
- sphinx-apidoc.exe -o src ..
+sphinx-apidoc.exe -o source .. -f -e --implicit-namespaces 
 ```
 
 Ahora, desde la misma carpeta ``docs``, genera la documentación
